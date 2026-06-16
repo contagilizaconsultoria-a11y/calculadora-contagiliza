@@ -406,6 +406,38 @@
   .success-state h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
   .success-state p { font-size: 14px; color: var(--gray-500); }
 
+  /* ── WHATSAPP BUTTON ── */
+  .whatsapp-btn {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: #25D366;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 50;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .whatsapp-btn:hover {
+    background: #1FB256;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  }
+  .whatsapp-btn:active {
+    transform: scale(0.98);
+  }
+  .whatsapp-btn svg {
+    width: 28px; height: 28px;
+    fill: white;
+  }
+  @media (max-width: 600px) {
+    .whatsapp-btn { bottom: 16px; right: 16px; width: 48px; height: 48px; }
+    .whatsapp-btn svg { width: 24px; height: 24px; }
+  }
+
   @media (max-width: 600px) {
     .hero { padding: 3.5rem 1.25rem 3rem; }
     .hero-stats { gap: 1.5rem; }
@@ -643,6 +675,11 @@
     </div>
   </div>
 </div>
+
+<!-- WHATSAPP BUTTON -->
+<a href="https://wa.me/5585996249469?text=Ol%C3%A1%2C%20gostaria%20de%20conhecer%20mais%20sobre%20a%20Calculadora%20Contagiliza" class="whatsapp-btn" target="_blank" title="Fale conosco no WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-9.746 9.798c0 2.571.738 5.072 2.119 7.231l-2.256 6.537 6.934-2.204c2.07 1.122 4.398 1.716 6.79 1.716h.005c5.393 0 9.747-4.355 9.747-9.748 0-2.607-.738-5.065-2.118-7.226a9.822 9.822 0 00-7.527-3.104z"/></svg>
+</a>
 
 <script>
 // ── DATA ────────────────────────────────────────────
