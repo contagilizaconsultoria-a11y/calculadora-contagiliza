@@ -966,11 +966,13 @@ function calcular() {
   // Bars
   const maxImp = Math.max(...Object.values(impostos));
   ['simples','simples_r','presumido','real'].forEach(r => {
-    const pctBar = maxImp > 0 ? Math.round((impostos[r] / maxImp) * 100) : 0;
-    const el = document.getElementById('bar-' + r);
-    const valEl = document.getElementById('bar-' + r + '-val');
+    const impostoVal = impostos[r] || 0;
+    const pctBar = maxImp > 0 ? Math.round((impostoVal / maxImp) * 100) : 0;
+    const barKey = r === 'simples_r' ? 'simples-r' : r;
+    const el = document.getElementById('bar-' + barKey);
+    const valEl = document.getElementById('bar-' + barKey + '-val');
     if (el) el.style.width = pctBar + '%';
-    if (valEl) valEl.textContent = fmt(impostos[r]) + ' / mês';
+    if (valEl) valEl.textContent = fmt(impostoVal) + ' / mês';
   });
 
   // Aliq info
