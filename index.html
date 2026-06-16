@@ -521,6 +521,7 @@
         <label>Regime tributário atual</label>
         <div class="regime-pills" id="regimePills">
           <button class="pill active" onclick="setRegime(this,'simples')">Simples Nacional</button>
+          <button class="pill" onclick="setRegime(this,'simples_r')">Simples Nacional (Fator R)</button>
           <button class="pill" onclick="setRegime(this,'presumido')">Lucro Presumido</button>
           <button class="pill" onclick="setRegime(this,'real')">Lucro Real</button>
         </div>
@@ -602,6 +603,13 @@
               <span class="compare-row-val" id="bar-simples-val">—</span>
             </div>
             <div class="bar-track"><div class="bar-fill current" id="bar-simples" style="width:0%"></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-row-head">
+              <span class="compare-row-name">Simples Fator R</span>
+              <span class="compare-row-val" id="bar-simples-r-val">—</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill alt" id="bar-simples-r" style="width:0%"></div></div>
           </div>
           <div class="compare-row">
             <div class="compare-row-head">
@@ -837,6 +845,22 @@ function calcSimplesTaxes(fat, rbt12, annex) {
   };
 }
 
+function calcSimplesRTaxes(fat, rbt12, annex) {
+  const payrollCost = fat * 0.28;
+  const simples = calcSimplesTaxes(fat, rbt12, annex);
+  const total = simples.total + payrollCost;
+  return {
+    total,
+    effectiveRate: fat > 0 ? total / fat : 0,
+    annex,
+    deduction: simples.deduction,
+    rbt12,
+    payrollCost,
+    simplesTax: simples.total,
+    bracket: simples.bracket,
+  };
+}
+
 function calcPresumidoTaxes(fat, baseRate) {
   const base = fat * baseRate;
   const irpj = base * 0.15;
@@ -878,18 +902,21 @@ function calcular() {
   const rbt12 = fat * 12;
 
   const simples = calcSimplesTaxes(fat, rbt12, segAtual.simplesAnnex || 'III');
+  const simplesR = calcSimplesRTaxes(fat, rbt12, 'III');
   const lucro = estimateProfit(fat, folha, despesas);
   const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase);
   const real = calcRealTaxes(fat, lucro);
 
   const impostos = {
     simples: simples.total,
+    simples_r: simplesR.total,
     presumido: presumido.total,
     real: real.total,
   };
 
   const aliquotasEfetivas = {
     simples: simples.effectiveRate,
+    simples_r: simplesR.effectiveRate,
     presumido: presumido.effectiveRate,
     real: real.effectiveRate,
   };
@@ -900,7 +927,7 @@ function calcular() {
   // find best
   let melhorId = 'simples';
   let menorImposto = impostos.simples;
-  ['presumido','real'].forEach(r => {
+  ['simples_r','presumido','real'].forEach(r => {
     if (impostos[r] < menorImposto) { menorImposto = impostos[r]; melhorId = r; }
   });
 
@@ -921,7 +948,7 @@ function calcular() {
 
   // RENDER RESULTS
   document.getElementById('r-atual').textContent = fmt(atual);
-  document.getElementById('r-melhor').textContent = { simples: 'Simples Nacional', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado];
+  document.getElementById('r-melhor').textContent = { simples: 'Simples Nacional', simples_r: 'Simples Nacional (Fator R)', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado];
   document.getElementById('r-novo').textContent = fmt(impostoNovo);
   document.getElementById('r-mensal').textContent = fmt(ecoMensal);
   document.getElementById('r-aliq-atual').textContent = pct(aliqAtual);
@@ -933,12 +960,12 @@ function calcular() {
   ecoEl.classList.toggle('positive', ecoAnual > 0);
 
   document.getElementById('ecoSub').textContent = ecoAnual > 0
-    ? `Migração de ${regimeAtual === 'simples' ? 'Simples Nacional' : regimeAtual === 'presumido' ? 'Lucro Presumido' : 'Lucro Real'} → ${{ simples: 'Simples Nacional', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado]}`
+    ? `Migração de ${regimeAtual === 'simples' ? 'Simples Nacional' : regimeAtual === 'simples_r' ? 'Simples Nacional (Fator R)' : regimeAtual === 'presumido' ? 'Lucro Presumido' : 'Lucro Real'} → ${{ simples: 'Simples Nacional', simples_r: 'Simples Nacional (Fator R)', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado]}`
     : 'Ajuste os dados para ver o potencial de economia.';
 
   // Bars
   const maxImp = Math.max(...Object.values(impostos));
-  ['simples','presumido','real'].forEach(r => {
+  ['simples','simples_r','presumido','real'].forEach(r => {
     const pctBar = maxImp > 0 ? Math.round((impostos[r] / maxImp) * 100) : 0;
     const el = document.getElementById('bar-' + r);
     const valEl = document.getElementById('bar-' + r + '-val');
@@ -947,8 +974,17 @@ function calcular() {
   });
 
   // Aliq info
-  document.getElementById('aliqText').innerHTML =
-    `Simples Nacional: Anexo ${simples.annex}, RBT12 ${fmt(simples.rbt12)}, dedução ${fmt(simples.deduction)}, alíquota efetiva ${pct(simples.effectiveRate)}.`;
+  if (regimeAtual === 'simples' || regimeAtual === 'simples_r') {
+    document.getElementById('aliqText').innerHTML =
+      `Simples Nacional: Anexo ${simples.annex}, RBT12 ${fmt(simples.rbt12)}, dedução ${fmt(simples.deduction)}, alíquota efetiva ${pct(simples.effectiveRate)}.` +
+      (regimeAtual === 'simples_r' ? ` Custo folha adicional (INSS + IRRF): ${fmt(simplesR.payrollCost)}.` : '');
+  } else if (regimeAtual === 'presumido') {
+    document.getElementById('aliqText').innerHTML =
+      `Lucro Presumido: base presumida ${fmt(presumido.breakdown.base)}, IRPJ ${fmt(presumido.breakdown.irpj)}, CSLL ${fmt(presumido.breakdown.csll)}, PIS/COFINS ${fmt(presumido.breakdown.pisCofins)}.`;
+  } else {
+    document.getElementById('aliqText').innerHTML =
+      `Lucro Real: lucro estimado ${fmt(real.breakdown.profit)}, IRPJ ${fmt(real.breakdown.irpj)}, CSLL ${fmt(real.breakdown.csll)}, PIS/COFINS ${fmt(real.breakdown.pisCofins)}.`;
+  }
 
   // Seg detail
   document.getElementById('segDetailText').textContent = segAtual.detail;
