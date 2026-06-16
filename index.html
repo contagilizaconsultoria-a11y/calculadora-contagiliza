@@ -687,42 +687,56 @@ const segmentos = [
   {
     id: 'servicos', nome: 'Serviços', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>`,
     aliquotas: { simples: 0.135, presumido: 0.138, real: 0.085 },
+    presumidoBase: 0.32,
+    simplesProfile: 'servicos',
     melhor: 'real',
     detail: 'Para empresas de serviços com alto faturamento e margens elevadas, o Lucro Real costuma ser o mais eficiente — especialmente com folha robusta e despesas dedutíveis expressivas.',
   },
   {
     id: 'comercio', nome: 'Comércio', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
     aliquotas: { simples: 0.075, presumido: 0.058, real: 0.060 },
+    presumidoBase: 0.08,
+    simplesProfile: 'comercio',
     melhor: 'presumido',
     detail: 'No comércio, o Lucro Presumido frequentemente é mais vantajoso pela base de cálculo mais favorável (1,6% a 8%) e menor burocracia em relação ao Lucro Real.',
   },
   {
     id: 'industria', nome: 'Indústria', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>`,
     aliquotas: { simples: 0.095, presumido: 0.085, real: 0.072 },
+    presumidoBase: 0.08,
+    simplesProfile: 'industria',
     melhor: 'real',
     detail: 'Indústrias se beneficiam do Lucro Real pelo aproveitamento de créditos de PIS/COFINS não cumulativos e pela dedução de insumos e depreciação de ativos.',
   },
   {
     id: 'ti', nome: 'TI / Software', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M9 9l2 2 4-4"/></svg>`,
     aliquotas: { simples: 0.155, presumido: 0.138, real: 0.092 },
+    presumidoBase: 0.32,
+    simplesProfile: 'servicos',
     melhor: 'real',
     detail: 'Empresas de TI com receitas de software (SaaS, licenças) se enquadram no Anexo V ou VI do Simples, com alíquotas elevadas. O Lucro Real permite compensar créditos de P&D e salários como base para redução tributária.',
   },
   {
     id: 'saude', nome: 'Saúde', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
     aliquotas: { simples: 0.135, presumido: 0.115, real: 0.080 },
+    presumidoBase: 0.32,
+    simplesProfile: 'servicos',
     melhor: 'real',
     detail: 'Clínicas e laboratórios com alto volume de folha podem reduzir significativamente a carga com o Lucro Real, além de deduzir equipamentos e infraestrutura hospitalar.',
   },
   {
     id: 'construcao', nome: 'Construção Civil', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="3 22 21 22 12 2"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
     aliquotas: { simples: 0.105, presumido: 0.080, real: 0.068 },
+    presumidoBase: 0.16,
+    simplesProfile: 'construcao',
     melhor: 'real',
     detail: 'Na construção civil, o Lucro Real é interessante pela capacidade de deduzir materiais, subempreiteiros e depreciação de máquinas. O RET (Regime Especial de Tributação) pode ser ainda mais vantajoso para incorporadoras.',
   },
   {
     id: 'transporte', nome: 'Transporte', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
     aliquotas: { simples: 0.090, presumido: 0.058, real: 0.055 },
+    presumidoBase: 0.08,
+    simplesProfile: 'transporte',
     melhor: 'presumido',
     detail: 'No transporte de cargas, o Lucro Presumido com base de 8% sobre o faturamento é historicamente o regime mais equilibrado. O Lucro Real compensa somente quando há muitos custos dedutíveis (frotas, manutenção, diesel).',
   },
@@ -764,6 +778,49 @@ function setMargem(v) {
   calcular();
 }
 
+function estimateProfit(fat, folha, despesas) {
+  const profitFromMargin = fat * (margem / 100);
+  const profitFromCosts = fat - folha - despesas;
+  return Math.max(0, profitFromMargin, profitFromCosts);
+}
+
+function getSimplesRate(profile, fat) {
+  const brackets = [
+    { limit: 180000, comercio: 0.045, servicos: 0.065, industria: 0.045, construcao: 0.065, transporte: 0.05 },
+    { limit: 360000, comercio: 0.065, servicos: 0.085, industria: 0.065, construcao: 0.085, transporte: 0.07 },
+    { limit: 720000, comercio: 0.085, servicos: 0.105, industria: 0.085, construcao: 0.105, transporte: 0.09 },
+    { limit: 1800000, comercio: 0.11, servicos: 0.135, industria: 0.11, construcao: 0.135, transporte: 0.12 },
+    { limit: Infinity, comercio: 0.145, servicos: 0.17, industria: 0.145, construcao: 0.17, transporte: 0.16 },
+  ];
+  const bracket = brackets.find(b => fat <= b.limit) || brackets[brackets.length - 1];
+  return bracket[profile] ?? 0.16;
+}
+
+function calcPresumidoTaxes(fat, baseRate) {
+  const base = fat * baseRate;
+  const irpj = base * 0.15;
+  const csll = base * 0.09;
+  const pisCofins = fat * 0.0365;
+  const total = irpj + csll + pisCofins;
+  return {
+    total,
+    effectiveRate: fat > 0 ? total / fat : 0,
+    breakdown: { base, irpj, csll, pisCofins },
+  };
+}
+
+function calcRealTaxes(fat, profit) {
+  const irpj = profit * 0.15 + Math.max(0, profit - 20000) * 0.10;
+  const csll = profit * 0.09;
+  const pisCofins = fat * 0.0925;
+  const total = Math.max(0, irpj + csll + pisCofins);
+  return {
+    total,
+    effectiveRate: fat > 0 ? total / fat : 0,
+    breakdown: { profit, irpj, csll, pisCofins },
+  };
+}
+
 // ── FORMAT ─────────────────────────────────────────
 function fmt(v) {
   return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
@@ -778,22 +835,21 @@ function calcular() {
   const folha = parseFloat(document.getElementById('folha').value) || 0;
   const despesas = parseFloat(document.getElementById('despesas').value) || 0;
 
-  const aliq = segAtual.aliquotas;
-
-  // Lucro Real: tributa sobre lucro estimado pela margem
-  const lucro = fat * (margem / 100);
-  const aliqRealEfetiva = Math.max(0.04, (lucro * 0.34) / fat);
+  const simplesRate = getSimplesRate(segAtual.simplesProfile, fat);
+  const lucro = estimateProfit(fat, folha, despesas);
+  const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase);
+  const real = calcRealTaxes(fat, lucro);
 
   const impostos = {
-    simples: fat * aliq.simples,
-    presumido: fat * aliq.presumido,
-    real: Math.max(0, lucro * 0.34),
+    simples: fat * simplesRate,
+    presumido: presumido.total,
+    real: real.total,
   };
 
   const aliquotasEfetivas = {
-    simples: aliq.simples,
-    presumido: aliq.presumido,
-    real: aliqRealEfetiva,
+    simples: simplesRate,
+    presumido: presumido.effectiveRate,
+    real: real.effectiveRate,
   };
 
   const atual = impostos[regimeAtual];
