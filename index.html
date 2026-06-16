@@ -845,17 +845,37 @@ function calcSimplesTaxes(fat, rbt12, annex) {
   };
 }
 
-function calcSimplesRTaxes(fat, rbt12, annex) {
-  const payrollCost = fat * 0.28;
-  const simples = calcSimplesTaxes(fat, rbt12, annex);
-  const total = simples.total + payrollCost;
+function calcINSS(proLabore) {
+  if (proLabore <= 1212.0) return proLabore * 0.075;
+  if (proLabore <= 2427.35) return 1212.0 * 0.075 + (proLabore - 1212.0) * 0.09;
+  if (proLabore <= 3641.03) return 1212.0 * 0.075 + (2427.35 - 1212.0) * 0.09 + (proLabore - 2427.35) * 0.12;
+  if (proLabore <= 7087.22) return 1212.0 * 0.075 + (2427.35 - 1212.0) * 0.09 + (3641.03 - 2427.35) * 0.12 + (proLabore - 3641.03) * 0.14;
+  return 828.39; // teto INSS 2024
+}
+
+function calcIRRF(proLabore, inssDeduction) {
+  const base = Math.max(0, proLabore - inssDeduction);
+  if (base <= 1903.98) return 0;
+  if (base <= 2826.65) return base * 0.075 - 142.8;
+  if (base <= 3751.05) return base * 0.15 - 354.8;
+  if (base <= 4664.68) return base * 0.225 - 636.13;
+  return base * 0.275 - 869.36;
+}
+
+function calcSimplesRTaxes(fat, rbt12, proLabore) {
+  const simples = calcSimplesTaxes(fat, rbt12, 'III');
+  const inss = calcINSS(proLabore);
+  const irrf = calcIRRF(proLabore, inss);
+  const payrollCost = Math.max(0, inss) + Math.max(0, irrf);
   return {
-    total,
-    effectiveRate: fat > 0 ? total / fat : 0,
-    annex,
+    total: simples.total,
+    effectiveRate: fat > 0 ? simples.total / fat : 0,
+    annex: 'III',
     deduction: simples.deduction,
     rbt12,
     payrollCost,
+    inss,
+    irrf,
     simplesTax: simples.total,
     bracket: simples.bracket,
   };
@@ -902,7 +922,7 @@ function calcular() {
   const rbt12 = fat * 12;
 
   const simples = calcSimplesTaxes(fat, rbt12, segAtual.simplesAnnex || 'III');
-  const simplesR = calcSimplesRTaxes(fat, rbt12, 'III');
+  const simplesR = calcSimplesRTaxes(fat, rbt12, folha);
   const lucro = estimateProfit(fat, folha, despesas);
   const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase);
   const real = calcRealTaxes(fat, lucro);
@@ -975,10 +995,12 @@ function calcular() {
   });
 
   // Aliq info
-  if (regimeAtual === 'simples' || regimeAtual === 'simples_r') {
+  if (regimeAtual === 'simples') {
     document.getElementById('aliqText').innerHTML =
-      `Simples Nacional: Anexo ${simples.annex}, RBT12 ${fmt(simples.rbt12)}, dedução ${fmt(simples.deduction)}, alíquota efetiva ${pct(simples.effectiveRate)}.` +
-      (regimeAtual === 'simples_r' ? ` Custo folha adicional (INSS + IRRF): ${fmt(simplesR.payrollCost)}.` : '');
+      `Simples Nacional: Anexo ${simples.annex}, RBT12 ${fmt(simples.rbt12)}, dedução ${fmt(simples.deduction)}, alíquota efetiva ${pct(simples.effectiveRate)}.`;
+  } else if (regimeAtual === 'simples_r') {
+    document.getElementById('aliqText').innerHTML =
+      `Simples Nacional (Fator R): Anexo ${simplesR.annex}, RBT12 ${fmt(simplesR.rbt12)}, dedução ${fmt(simplesR.deduction)}, alíquota efetiva ${pct(simplesR.effectiveRate)}. INSS pró-labore: ${fmt(simplesR.inss)}, IRRF pró-labore: ${fmt(simplesR.irrf)}.`;
   } else if (regimeAtual === 'presumido') {
     document.getElementById('aliqText').innerHTML =
       `Lucro Presumido: base presumida ${fmt(presumido.breakdown.base)}, IRPJ ${fmt(presumido.breakdown.irpj)}, CSLL ${fmt(presumido.breakdown.csll)}, PIS/COFINS ${fmt(presumido.breakdown.pisCofins)}.`;
