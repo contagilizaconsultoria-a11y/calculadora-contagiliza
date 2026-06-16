@@ -607,9 +607,9 @@
           <div class="compare-row">
             <div class="compare-row-head">
               <span class="compare-row-name">Simples Fator R</span>
-              <span class="compare-row-val" id="bar-simples-r-val">—</span>
+              <span class="compare-row-val" id="bar-simples_r-val">—</span>
             </div>
-            <div class="bar-track"><div class="bar-fill alt" id="bar-simples-r" style="width:0%"></div></div>
+            <div class="bar-track"><div class="bar-fill alt" id="bar-simples_r" style="width:0%"></div></div>
           </div>
           <div class="compare-row">
             <div class="compare-row-head">
@@ -968,9 +968,8 @@ function calcular() {
   ['simples','simples_r','presumido','real'].forEach(r => {
     const impostoVal = impostos[r] || 0;
     const pctBar = maxImp > 0 ? Math.round((impostoVal / maxImp) * 100) : 0;
-    const barKey = r === 'simples_r' ? 'simples-r' : r;
-    const el = document.getElementById('bar-' + barKey);
-    const valEl = document.getElementById('bar-' + barKey + '-val');
+    const el = document.getElementById('bar-' + r);
+    const valEl = document.getElementById('bar-' + r + '-val');
     if (el) el.style.width = pctBar + '%';
     if (valEl) valEl.textContent = fmt(impostoVal) + ' / mês';
   });
