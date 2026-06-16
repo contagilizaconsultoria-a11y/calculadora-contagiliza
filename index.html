@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Calculadora de Economia Tributária</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0D2B4E;
+    --navy-light: #1A3E6B;
+    --green: #0E7A5F;
+    --green-light: #E6F4F1;
+    --green-mid: #B2DFDB;
+    --blue-accent: #1B6FC8;
+    --blue-light: #EBF3FC;
+    --gray-100: #F7F8FA;
+    --gray-200: #EAECF0;
+    --gray-300: #D1D5DB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --white: #FFFFFF;
+    --amber: #B45309;
+    --amber-light: #FEF3C7;
+    --red: #B91C1C;
+    --red-light: #FEE2E2;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-900);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 0 2rem;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  .header-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--blue-accent);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark svg { width: 18px; height: 18px; fill: white; }
+  .logo-name { color: white; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+  .logo-name span { color: #7EC8E3; }
+
+  .header-cta {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .btn-contact {
+    background: var(--green);
+    color: white; border: none;
+    padding: 9px 20px; border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    display: flex; align-items: center; gap: 7px;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .btn-contact:hover { background: #0a6349; transform: translateY(-1px); }
+  .btn-contact:active { transform: translateY(0); }
+  .btn-contact svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--navy) 0%, #0F3564 60%, #133D73 100%);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(27,111,200,0.15) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(14,122,95,0.12) 0%, transparent 50%);
+  }
+  .hero-inner { position: relative; max-width: 720px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #93C5FD; font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 5px 14px; border-radius: 999px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge svg { width: 12px; height: 12px; fill: currentColor; }
+  .hero h1 {
+    color: white; font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700; letter-spacing: -0.03em;
+    line-height: 1.15; margin-bottom: 1rem;
+  }
+  .hero h1 em { color: #7EC8E3; font-style: normal; }
+  .hero p {
+    color: rgba(255,255,255,0.72); font-size: 1.05rem;
+    max-width: 540px; margin: 0 auto 2rem;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    padding-top: 2rem; margin-top: 0.5rem;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .val { color: white; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+  .hero-stat .lbl { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 2px; }
+
+  /* ── MAIN LAYOUT ── */
+  .main-wrap {
+    max-width: 1100px; margin: -2.5rem auto 0;
+    padding: 0 1.5rem 4rem;
+    position: relative; z-index: 1;
+  }
+
+  /* ── SEGMENT PICKER ── */
+  .segment-section {
+    background: white; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md); padding: 1.75rem 2rem;
+    margin-bottom: 1.25rem;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gray-500);
+    margin-bottom: 1rem;
+  }
+  .segment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .seg-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    padding: 14px 10px; border-radius: var(--radius-md);
+    border: 1.5px solid var(--gray-200);
+    background: var(--gray-100);
+    cursor: pointer; transition: all 0.15s;
+    font-family: inherit; text-align: center;
+  }
+  .seg-btn:hover { border-color: var(--blue-accent); background: var(--blue-light); }
+  .seg-btn.active {
+    border-color: var(--blue-accent); background: var(--blue-light);
+    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+  }
+  .seg-icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--gray-200); display: flex; align-items: center;
+    justify-content: center; transition: background 0.15s;
+  }
+  .seg-btn.active .seg-icon { background: var(--blue-accent); }
+  .seg-icon svg { width: 18px; height: 18px; }
+  .seg-btn.active .seg-icon svg { stroke: white; }
+  .seg-icon svg { stroke: var(--gray-500); fill: none; stroke-width: 1.8; }
+  .seg-name { font-size: 12px; font-weight: 500; color: var(--gray-700); line-height: 1.3; }
+  .seg-btn.active .seg-name { color: var(--blue-accent); font-weight: 600; }
+
+  /* ── CALC GRID ── */
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (max-width: 720px) { .calc-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: white; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md); padding: 1.75rem 2rem;
+  }
+
+  /* ── INPUTS ── */
+  .field { margin-bottom: 1.25rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block; font-size: 13px; font-weight: 500;
+    color: var(--gray-700); margin-bottom: 6px;
+  }
+  .field label span { color: var(--gray-500); font-weight: 400; font-size: 12px; }
+
+  .input-wrap { position: relative; }
+  .input-prefix {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 13px; color: var(--gray-500); font-weight: 500; pointer-events: none;
+  }
+  .input-wrap input {
+    width: 100%; padding: 10px 12px 10px 36px;
+    border: 1.5px solid var(--gray-300); border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 14px; color: var(--gray-900);
+    background: white; transition: border-color 0.15s, box-shadow 0.15s;
+    -moz-appearance: textfield;
+  }
+  .input-wrap input::-webkit-outer-spin-button,
+  .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus {
+    outline: none; border-color: var(--blue-accent);
+    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+  }
+  .input-wrap input.no-prefix { padding-left: 12px; }
+
+  select.inp {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid var(--gray-300); border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 14px; color: var(--gray-900);
+    background: white; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236B7280' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  select.inp:focus {
+    outline: none; border-color: var(--blue-accent);
+    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+  }
+
+  /* Regime pills */
+  .regime-pills { display: flex; gap: 7px; flex-wrap: wrap; }
+  .pill {
+    padding: 7px 14px; border-radius: 999px;
+    border: 1.5px solid var(--gray-300); background: white;
+    font-size: 13px; font-weight: 500; color: var(--gray-700);
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .pill:hover { border-color: var(--blue-accent); color: var(--blue-accent); background: var(--blue-light); }
+  .pill.active { border-color: var(--blue-accent); background: var(--blue-accent); color: white; }
+
+  /* Slider */
+  .slider-wrap { margin-top: 8px; }
+  .slider-wrap input[type=range] {
+    width: 100%; height: 4px; accent-color: var(--blue-accent); cursor: pointer;
+  }
+  .slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-500); margin-top: 4px; }
+
+  /* Aliquota info */
+  .aliq-info {
+    display: flex; gap: 6px; align-items: flex-start;
+    background: var(--blue-light); border-radius: var(--radius-sm);
+    padding: 10px 12px; font-size: 12px; color: #1A3E6B;
+    margin-top: 10px; line-height: 1.5;
+  }
+  .aliq-info svg { width: 14px; height: 14px; fill: var(--blue-accent); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── RESULTS ── */
+  .results-card {
+    background: white; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--green-mid);
+    overflow: hidden;
+    position: sticky; top: 80px;
+  }
+  .results-header {
+    background: var(--navy); padding: 1.25rem 1.75rem;
+  }
+  .results-header p { color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .economy-number {
+    color: #7EC8E3; font-size: 2.8rem; font-weight: 700;
+    letter-spacing: -0.04em; line-height: 1; transition: color 0.3s;
+  }
+  .economy-number.positive { color: #4ADE80; }
+  .economy-sub { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 6px; }
+
+  .results-body { padding: 1.5rem 1.75rem; }
+
+  .result-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 0; border-bottom: 1px solid var(--gray-200);
+    gap: 12px;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-lbl { font-size: 13px; color: var(--gray-500); }
+  .result-val { font-size: 14px; font-weight: 600; color: var(--gray-900); text-align: right; }
+  .result-val.green { color: var(--green); font-size: 16px; }
+  .result-val.red { color: var(--red); }
+  .result-val.muted { color: var(--gray-500); font-weight: 400; }
+
+  /* Regime comparison bars */
+  .compare-section { margin-top: 1.25rem; }
+  .compare-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gray-500); margin-bottom: 10px; font-weight: 600; }
+  .compare-row { margin-bottom: 10px; }
+  .compare-row-head { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .compare-row-name { color: var(--gray-700); font-weight: 500; }
+  .compare-row-val { color: var(--gray-500); }
+  .bar-track { height: 7px; background: var(--gray-200); border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+  .bar-fill.current { background: var(--amber); }
+  .bar-fill.alt { background: var(--blue-accent); }
+  .bar-fill.best { background: var(--green); }
+
+  /* CTA block */
+  .cta-block {
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-radius: var(--radius-md); padding: 1.25rem;
+    text-align: center;
+  }
+  .cta-block p { color: rgba(255,255,255,0.7); font-size: 12px; margin-bottom: 10px; line-height: 1.5; }
+  .btn-cta-big {
+    display: block; width: 100%; padding: 12px;
+    background: var(--green); color: white; border: none;
+    border-radius: var(--radius-sm); font-family: inherit;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    text-decoration: none; transition: background 0.15s, transform 0.1s;
+    letter-spacing: -0.01em;
+  }
+  .btn-cta-big:hover { background: #0a6349; transform: translateY(-1px); }
+
+  /* disclaimer */
+  .disclaimer {
+    text-align: center; font-size: 11px; color: var(--gray-500);
+    margin-top: 0.75rem; line-height: 1.5;
+  }
+
+  /* ── SEGMENT DETAIL ── */
+  .seg-detail {
+    background: var(--green-light); border-radius: var(--radius-md);
+    border: 1px solid var(--green-mid); padding: 12px 14px;
+    margin-top: 1rem; font-size: 13px; color: #0a5040;
+    display: flex; gap: 8px; align-items: flex-start; line-height: 1.5;
+  }
+  .seg-detail svg { width: 15px; height: 15px; fill: var(--green); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.5);
+    text-align: center; padding: 1.5rem 2rem; font-size: 12px; line-height: 1.7;
+  }
+  footer a { color: #7EC8E3; text-decoration: none; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(13,43,78,0.7); backdrop-filter: blur(4px);
+    z-index: 1000; align-items: center; justify-content: center; padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg); max-width: 460px; width: 100%;
+    padding: 2rem; position: relative; animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--gray-100); border: none; border-radius: 50%;
+    width: 30px; height: 30px; font-size: 18px; cursor: pointer;
+    color: var(--gray-500); display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: var(--gray-200); }
+  .modal h2 { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .modal > p { font-size: 13px; color: var(--gray-500); margin-bottom: 1.5rem; }
+  .modal .field { margin-bottom: 1rem; }
+  .modal .field label { font-size: 13px; font-weight: 500; color: var(--gray-700); display: block; margin-bottom: 5px; }
+  .modal .field input, .modal .field select.inp {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid var(--gray-300); border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 14px; color: var(--gray-900);
+  }
+  .modal .field input:focus, .modal .field select.inp:focus {
+    outline: none; border-color: var(--blue-accent);
+    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+  }
+  .modal-economy-summary {
+    background: var(--green-light); border-radius: var(--radius-sm);
+    padding: 12px 16px; margin-bottom: 1.25rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-economy-summary .me-lbl { font-size: 13px; color: var(--green); }
+  .modal-economy-summary .me-val { font-size: 20px; font-weight: 700; color: var(--green); }
+  .btn-modal-submit {
+    width: 100%; padding: 13px; background: var(--green); color: white;
+    border: none; border-radius: var(--radius-sm); font-family: inherit;
+    font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-modal-submit:hover { background: #0a6349; }
+  .modal-legal { font-size: 11px; color: var(--gray-500); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+  /* success */
+  .success-state { text-align: center; padding: 1rem 0; }
+  .success-state .check-circle {
+    width: 56px; height: 56px; background: var(--green-light); border-radius: 50%;
+    margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .success-state .check-circle svg { width: 28px; height: 28px; stroke: var(--green); fill: none; stroke-width: 2.5; }
+  .success-state h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .success-state p { font-size: 14px; color: var(--gray-500); }
+
+  @media (max-width: 600px) {
+    .hero { padding: 3.5rem 1.25rem 3rem; }
+    .hero-stats { gap: 1.5rem; }
+    .main-wrap { padding: 0 1rem 3rem; }
+    .card, .results-card, .segment-section { padding: 1.25rem; }
+    .segment-grid { grid-template-columns: repeat(3, 1fr); }
+    .economy-number { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="logo-name">Calculadora<span>Contagiliza</span></span>
+    </div>
+    <div class="header-cta">
+      <button class="btn-contact" onclick="openModal()">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Falar com especialista
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <svg viewBox="0 0 16 16"><path d="M8 1l1.5 3 3.5.5-2.5 2.5.5 3.5L8 9l-3 1.5.5-3.5L3 4.5l3.5-.5z"/></svg>
+      Simulação tributária gratuita
+    </div>
+    <h1>Descubra quanto sua empresa pode <em>economizar em impostos</em></h1>
+    <p>Simule em segundos a diferença entre regimes tributários com base no perfil real do seu negócio.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="val">+R$ 80k</div>
+        <div class="lbl">economia média/ano identificada</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val">7 setores</div>
+        <div class="lbl">com cálculo personalizado</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val">3 regimes</div>
+        <div class="lbl">comparados simultaneamente</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- SEGMENT PICKER -->
+  <div class="segment-section">
+    <div class="section-label">Passo 1 — Selecione o segmento da sua empresa</div>
+    <div class="segment-grid" id="segGrid"></div>
+  </div>
+
+  <!-- CALC GRID -->
+  <div class="calc-grid">
+    <!-- INPUTS -->
+    <div class="card">
+      <div class="section-label" style="margin-bottom:1.25rem">Passo 2 — Dados financeiros</div>
+
+      <div class="field">
+        <label>Faturamento bruto mensal <span>(receita total antes de deduções)</span></label>
+        <div class="input-wrap">
+          <span class="input-prefix">R$</span>
+          <input type="number" id="faturamento" value="150000" min="0" oninput="calcular()"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Regime tributário atual</label>
+        <div class="regime-pills" id="regimePills">
+          <button class="pill active" onclick="setRegime(this,'simples')">Simples Nacional</button>
+          <button class="pill" onclick="setRegime(this,'presumido')">Lucro Presumido</button>
+          <button class="pill" onclick="setRegime(this,'real')">Lucro Real</button>
+        </div>
+        <div class="aliq-info" id="aliqInfo" style="margin-top:8px;">
+          <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.75.75 0 110 1.5A.75.75 0 018 4zm0 3.25c.414 0 .75.336.75.75v3a.75.75 0 01-1.5 0V8a.75.75 0 01.75-.75z"/></svg>
+          <span id="aliqText">Alíquota efetiva estimada: <strong>12,5%</strong> sobre o faturamento para este segmento e faixa.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Folha de pagamento mensal <span>(salários + encargos)</span></label>
+        <div class="input-wrap">
+          <span class="input-prefix">R$</span>
+          <input type="number" id="folha" value="40000" min="0" oninput="calcular()"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Despesas operacionais mensais <span>(aluguel, fornecedores, insumos)</span></label>
+        <div class="input-wrap">
+          <span class="input-prefix">R$</span>
+          <input type="number" id="despesas" value="35000" min="0" oninput="calcular()"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Margem de lucro estimada: <strong id="margemLabel">25%</strong></label>
+        <div class="slider-wrap">
+          <input type="range" id="margemSlider" min="3" max="60" value="25" step="1" oninput="setMargem(this.value)"/>
+          <div class="slider-labels"><span>3%</span><span>60%</span></div>
+        </div>
+      </div>
+
+      <div class="seg-detail" id="segDetail">
+        <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.75.75 0 110 1.5A.75.75 0 018 4zm0 3.25c.414 0 .75.336.75.75v3a.75.75 0 01-1.5 0V8a.75.75 0 01.75-.75z"/></svg>
+        <span id="segDetailText">Selecione um segmento acima para ver observações específicas.</span>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-card">
+      <div class="results-header">
+        <p>Economia anual estimada</p>
+        <div class="economy-number" id="ecoAnual">R$ 0</div>
+        <div class="economy-sub" id="ecoSub">Preencha os dados ao lado para simular</div>
+      </div>
+      <div class="results-body">
+        <div class="result-row">
+          <span class="result-lbl">Imposto atual (regime atual)</span>
+          <span class="result-val" id="r-atual">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-lbl">Regime mais indicado</span>
+          <span class="result-val" id="r-melhor">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-lbl">Imposto no regime indicado</span>
+          <span class="result-val" id="r-novo">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-lbl">Economia mensal</span>
+          <span class="result-val green" id="r-mensal">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-lbl">Alíquota efetiva atual</span>
+          <span class="result-val" id="r-aliq-atual">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-lbl">Alíquota efetiva indicada</span>
+          <span class="result-val green" id="r-aliq-ind">—</span>
+        </div>
+
+        <!-- COMPARE BARS -->
+        <div class="compare-section">
+          <div class="compare-title">Comparativo de carga tributária</div>
+          <div class="compare-row">
+            <div class="compare-row-head">
+              <span class="compare-row-name">Simples Nacional</span>
+              <span class="compare-row-val" id="bar-simples-val">—</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill current" id="bar-simples" style="width:0%"></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-row-head">
+              <span class="compare-row-name">Lucro Presumido</span>
+              <span class="compare-row-val" id="bar-presumido-val">—</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill alt" id="bar-presumido" style="width:0%"></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-row-head">
+              <span class="compare-row-name">Lucro Real</span>
+              <span class="compare-row-val" id="bar-real-val">—</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill best" id="bar-real" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-block">
+          <p>Quer uma análise personalizada com os dados reais da sua empresa?</p>
+          <button class="btn-cta-big" onclick="openModal()">Receber análise completa gratuita →</button>
+        </div>
+        <p class="disclaimer">* Estimativas ilustrativas com base em alíquotas médias por segmento. Não substitui análise contábil profissional.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong style="color:rgba(255,255,255,0.8)">Calculadora Contagiliza Financeira</strong> · Especialistas em gestão tributária e financeira</p>
+  <p style="margin-top:4px">contato@contagilizacontabilidade.com.br · 85 9 9624-9469 · Fortaleza, CE</p>
+  <p style="margin-top:8px">© 2025 · Simulação meramente ilustrativa. Consulte sempre um profissional habilitado.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modalContent">
+      <h2>Análise tributária gratuita</h2>
+      <p>Um especialista vai analisar os dados reais da sua empresa e enviar um relatório personalizado.</p>
+      <div class="modal-economy-summary">
+        <span class="me-lbl">Potencial de economia estimado:</span>
+        <span class="me-val" id="modalEcoVal">R$ 0</span>
+      </div>
+      <div class="field">
+        <label>Nome completo</label>
+        <input type="text" id="m-nome" placeholder="João da Silva"/>
+      </div>
+      <div class="field">
+        <label>E-mail corporativo</label>
+        <input type="email" id="m-email" placeholder="joao@empresa.com.br"/>
+      </div>
+      <div class="field">
+        <label>WhatsApp</label>
+        <input type="tel" id="m-tel" placeholder="(85) 9 9999-0000"/>
+      </div>
+      <div class="field">
+        <label>Cargo</label>
+        <select id="m-cargo" class="inp">
+          <option>CEO / Sócio</option>
+          <option>CFO / Diretor Financeiro</option>
+          <option>Gerente Financeiro</option>
+          <option>Contador</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <button class="btn-modal-submit" onclick="submitModal()">Quero minha análise gratuita →</button>
+      <p class="modal-legal">Seus dados são protegidos e nunca serão compartilhados. Você pode cancelar a qualquer momento.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────
+const segmentos = [
+  {
+    id: 'servicos', nome: 'Serviços', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>`,
+    aliquotas: { simples: 0.135, presumido: 0.138, real: 0.085 },
+    melhor: 'real',
+    detail: 'Para empresas de serviços com alto faturamento e margens elevadas, o Lucro Real costuma ser o mais eficiente — especialmente com folha robusta e despesas dedutíveis expressivas.',
+  },
+  {
+    id: 'comercio', nome: 'Comércio', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
+    aliquotas: { simples: 0.075, presumido: 0.058, real: 0.060 },
+    melhor: 'presumido',
+    detail: 'No comércio, o Lucro Presumido frequentemente é mais vantajoso pela base de cálculo mais favorável (1,6% a 8%) e menor burocracia em relação ao Lucro Real.',
+  },
+  {
+    id: 'industria', nome: 'Indústria', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>`,
+    aliquotas: { simples: 0.095, presumido: 0.085, real: 0.072 },
+    melhor: 'real',
+    detail: 'Indústrias se beneficiam do Lucro Real pelo aproveitamento de créditos de PIS/COFINS não cumulativos e pela dedução de insumos e depreciação de ativos.',
+  },
+  {
+    id: 'ti', nome: 'TI / Software', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M9 9l2 2 4-4"/></svg>`,
+    aliquotas: { simples: 0.155, presumido: 0.138, real: 0.092 },
+    melhor: 'real',
+    detail: 'Empresas de TI com receitas de software (SaaS, licenças) se enquadram no Anexo V ou VI do Simples, com alíquotas elevadas. O Lucro Real permite compensar créditos de P&D e salários como base para redução tributária.',
+  },
+  {
+    id: 'saude', nome: 'Saúde', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+    aliquotas: { simples: 0.135, presumido: 0.115, real: 0.080 },
+    melhor: 'real',
+    detail: 'Clínicas e laboratórios com alto volume de folha podem reduzir significativamente a carga com o Lucro Real, além de deduzir equipamentos e infraestrutura hospitalar.',
+  },
+  {
+    id: 'construcao', nome: 'Construção Civil', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="3 22 21 22 12 2"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    aliquotas: { simples: 0.105, presumido: 0.080, real: 0.068 },
+    melhor: 'real',
+    detail: 'Na construção civil, o Lucro Real é interessante pela capacidade de deduzir materiais, subempreiteiros e depreciação de máquinas. O RET (Regime Especial de Tributação) pode ser ainda mais vantajoso para incorporadoras.',
+  },
+  {
+    id: 'transporte', nome: 'Transporte', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+    aliquotas: { simples: 0.090, presumido: 0.058, real: 0.055 },
+    melhor: 'presumido',
+    detail: 'No transporte de cargas, o Lucro Presumido com base de 8% sobre o faturamento é historicamente o regime mais equilibrado. O Lucro Real compensa somente quando há muitos custos dedutíveis (frotas, manutenção, diesel).',
+  },
+];
+
+// ── STATE ──────────────────────────────────────────
+let segAtual = segmentos[0];
+let regimeAtual = 'simples';
+let margem = 25;
+
+// ── BUILD SEGMENT GRID ─────────────────────────────
+function buildSegGrid() {
+  const grid = document.getElementById('segGrid');
+  grid.innerHTML = segmentos.map(s => `
+    <button class="seg-btn${s.id === segAtual.id ? ' active' : ''}" onclick="setSeg('${s.id}', this)">
+      <div class="seg-icon">${s.icon}</div>
+      <span class="seg-name">${s.nome}</span>
+    </button>
+  `).join('');
+}
+
+function setSeg(id, el) {
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  segAtual = segmentos.find(s => s.id === id);
+  calcular();
+}
+
+function setRegime(el, r) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  regimeAtual = r;
+  calcular();
+}
+
+function setMargem(v) {
+  margem = parseInt(v);
+  document.getElementById('margemLabel').textContent = margem + '%';
+  calcular();
+}
+
+// ── FORMAT ─────────────────────────────────────────
+function fmt(v) {
+  return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+}
+function pct(v) {
+  return (v * 100).toFixed(1) + '%';
+}
+
+// ── CALCULAR ───────────────────────────────────────
+function calcular() {
+  const fat = parseFloat(document.getElementById('faturamento').value) || 0;
+  const folha = parseFloat(document.getElementById('folha').value) || 0;
+  const despesas = parseFloat(document.getElementById('despesas').value) || 0;
+
+  const aliq = segAtual.aliquotas;
+
+  // Lucro Real: tributa sobre lucro estimado pela margem
+  const lucro = fat * (margem / 100);
+  const aliqRealEfetiva = Math.max(0.04, (lucro * 0.34) / fat);
+
+  const impostos = {
+    simples: fat * aliq.simples,
+    presumido: fat * aliq.presumido,
+    real: Math.max(0, lucro * 0.34),
+  };
+
+  const aliquotasEfetivas = {
+    simples: aliq.simples,
+    presumido: aliq.presumido,
+    real: aliqRealEfetiva,
+  };
+
+  const atual = impostos[regimeAtual];
+  const aliqAtual = aliquotasEfetivas[regimeAtual];
+
+  // find best
+  let melhorId = 'simples';
+  let menorImposto = impostos.simples;
+  ['presumido','real'].forEach(r => {
+    if (impostos[r] < menorImposto) { menorImposto = impostos[r]; melhorId = r; }
+  });
+
+  // if current is already best, pick second best
+  let recomendado = melhorId;
+  if (melhorId === regimeAtual) {
+    let secondBest = null; let secondVal = Infinity;
+    Object.keys(impostos).forEach(r => {
+      if (r !== regimeAtual && impostos[r] < secondVal) { secondVal = impostos[r]; secondBest = r; }
+    });
+    recomendado = secondBest || melhorId;
+  }
+
+  const impostoNovo = impostos[recomendado];
+  const aliqNova = aliquotasEfetivas[recomendado];
+  const ecoMensal = Math.max(0, atual - impostoNovo);
+  const ecoAnual = ecoMensal * 12;
+
+  // RENDER RESULTS
+  document.getElementById('r-atual').textContent = fmt(atual);
+  document.getElementById('r-melhor').textContent = { simples: 'Simples Nacional', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado];
+  document.getElementById('r-novo').textContent = fmt(impostoNovo);
+  document.getElementById('r-mensal').textContent = fmt(ecoMensal);
+  document.getElementById('r-aliq-atual').textContent = pct(aliqAtual);
+  document.getElementById('r-aliq-ind').textContent = pct(aliqNova);
+
+  // Big number
+  const ecoEl = document.getElementById('ecoAnual');
+  ecoEl.textContent = fmt(ecoAnual);
+  ecoEl.classList.toggle('positive', ecoAnual > 0);
+
+  document.getElementById('ecoSub').textContent = ecoAnual > 0
+    ? `Migração de ${regimeAtual === 'simples' ? 'Simples Nacional' : regimeAtual === 'presumido' ? 'Lucro Presumido' : 'Lucro Real'} → ${{ simples: 'Simples Nacional', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado]}`
+    : 'Ajuste os dados para ver o potencial de economia.';
+
+  // Bars
+  const maxImp = Math.max(...Object.values(impostos));
+  ['simples','presumido','real'].forEach(r => {
+    const pctBar = maxImp > 0 ? Math.round((impostos[r] / maxImp) * 100) : 0;
+    const el = document.getElementById('bar-' + r);
+    const valEl = document.getElementById('bar-' + r + '-val');
+    if (el) el.style.width = pctBar + '%';
+    if (valEl) valEl.textContent = fmt(impostos[r]) + ' / mês';
+  });
+
+  // Aliq info
+  const regiNomes = { simples: 'Simples Nacional', presumido: 'Lucro Presumido', real: 'Lucro Real' };
+  document.getElementById('aliqText').innerHTML =
+    `Alíquota efetiva estimada: <strong>${pct(aliqAtual)}</strong> no ${regiNomes[regimeAtual]} para ${segAtual.nome}.`;
+
+  // Seg detail
+  document.getElementById('segDetailText').textContent = segAtual.detail;
+
+  // Modal eco
+  document.getElementById('modalEcoVal').textContent = fmt(ecoAnual);
+}
+
+// ── MODAL ──────────────────────────────────────────
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+function submitModal() {
+  const nome = document.getElementById('m-nome').value.trim();
+  const email = document.getElementById('m-email').value.trim();
+  if (!nome || !email) { alert('Preencha nome e e-mail para continuar.'); return; }
+  document.getElementById('modalContent').innerHTML = `
+    <div class="success-state">
+      <div class="check-circle">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Solicitação enviada!</h3>
+      <p>Um especialista vai entrar em contato em até 24h úteis com sua análise tributária personalizada.</p>
+    </div>
+  `;
+}
+
+// ── INIT ───────────────────────────────────────────
+buildSegGrid();
+calcular();
+</script>
+</body>
+</html>
