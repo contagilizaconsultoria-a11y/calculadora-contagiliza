@@ -688,7 +688,7 @@ const segmentos = [
     id: 'servicos', nome: 'Serviços', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>`,
     aliquotas: { simples: 0.135, presumido: 0.138, real: 0.085 },
     presumidoBase: 0.32,
-    simplesProfile: 'servicos',
+    simplesAnnex: 'III',
     melhor: 'real',
     detail: 'Para empresas de serviços com alto faturamento e margens elevadas, o Lucro Real costuma ser o mais eficiente — especialmente com folha robusta e despesas dedutíveis expressivas.',
   },
@@ -696,7 +696,7 @@ const segmentos = [
     id: 'comercio', nome: 'Comércio', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
     aliquotas: { simples: 0.075, presumido: 0.058, real: 0.060 },
     presumidoBase: 0.08,
-    simplesProfile: 'comercio',
+    simplesAnnex: 'I',
     melhor: 'presumido',
     detail: 'No comércio, o Lucro Presumido frequentemente é mais vantajoso pela base de cálculo mais favorável (1,6% a 8%) e menor burocracia em relação ao Lucro Real.',
   },
@@ -704,7 +704,7 @@ const segmentos = [
     id: 'industria', nome: 'Indústria', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>`,
     aliquotas: { simples: 0.095, presumido: 0.085, real: 0.072 },
     presumidoBase: 0.08,
-    simplesProfile: 'industria',
+    simplesAnnex: 'II',
     melhor: 'real',
     detail: 'Indústrias se beneficiam do Lucro Real pelo aproveitamento de créditos de PIS/COFINS não cumulativos e pela dedução de insumos e depreciação de ativos.',
   },
@@ -712,7 +712,7 @@ const segmentos = [
     id: 'ti', nome: 'TI / Software', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M9 9l2 2 4-4"/></svg>`,
     aliquotas: { simples: 0.155, presumido: 0.138, real: 0.092 },
     presumidoBase: 0.32,
-    simplesProfile: 'servicos',
+    simplesAnnex: 'V',
     melhor: 'real',
     detail: 'Empresas de TI com receitas de software (SaaS, licenças) se enquadram no Anexo V ou VI do Simples, com alíquotas elevadas. O Lucro Real permite compensar créditos de P&D e salários como base para redução tributária.',
   },
@@ -720,7 +720,7 @@ const segmentos = [
     id: 'saude', nome: 'Saúde', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
     aliquotas: { simples: 0.135, presumido: 0.115, real: 0.080 },
     presumidoBase: 0.32,
-    simplesProfile: 'servicos',
+    simplesAnnex: 'III',
     melhor: 'real',
     detail: 'Clínicas e laboratórios com alto volume de folha podem reduzir significativamente a carga com o Lucro Real, além de deduzir equipamentos e infraestrutura hospitalar.',
   },
@@ -728,7 +728,7 @@ const segmentos = [
     id: 'construcao', nome: 'Construção Civil', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="3 22 21 22 12 2"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
     aliquotas: { simples: 0.105, presumido: 0.080, real: 0.068 },
     presumidoBase: 0.16,
-    simplesProfile: 'construcao',
+    simplesAnnex: 'III',
     melhor: 'real',
     detail: 'Na construção civil, o Lucro Real é interessante pela capacidade de deduzir materiais, subempreiteiros e depreciação de máquinas. O RET (Regime Especial de Tributação) pode ser ainda mais vantajoso para incorporadoras.',
   },
@@ -736,7 +736,7 @@ const segmentos = [
     id: 'transporte', nome: 'Transporte', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
     aliquotas: { simples: 0.090, presumido: 0.058, real: 0.055 },
     presumidoBase: 0.08,
-    simplesProfile: 'transporte',
+    simplesAnnex: 'III',
     melhor: 'presumido',
     detail: 'No transporte de cargas, o Lucro Presumido com base de 8% sobre o faturamento é historicamente o regime mais equilibrado. O Lucro Real compensa somente quando há muitos custos dedutíveis (frotas, manutenção, diesel).',
   },
@@ -784,16 +784,57 @@ function estimateProfit(fat, folha, despesas) {
   return Math.max(0, profitFromMargin, profitFromCosts);
 }
 
-function getSimplesRate(profile, fat) {
-  const brackets = [
-    { limit: 180000, comercio: 0.045, servicos: 0.065, industria: 0.045, construcao: 0.065, transporte: 0.05 },
-    { limit: 360000, comercio: 0.065, servicos: 0.085, industria: 0.065, construcao: 0.085, transporte: 0.07 },
-    { limit: 720000, comercio: 0.085, servicos: 0.105, industria: 0.085, construcao: 0.105, transporte: 0.09 },
-    { limit: 1800000, comercio: 0.11, servicos: 0.135, industria: 0.11, construcao: 0.135, transporte: 0.12 },
-    { limit: Infinity, comercio: 0.145, servicos: 0.17, industria: 0.145, construcao: 0.17, transporte: 0.16 },
-  ];
-  const bracket = brackets.find(b => fat <= b.limit) || brackets[brackets.length - 1];
-  return bracket[profile] ?? 0.16;
+function getSimplesTable(annex) {
+  const tables = {
+    I: [
+      { limit: 180000, a: 0.04, b: 0 },
+      { limit: 360000, a: 0.073, b: 5940 },
+      { limit: 720000, a: 0.095, b: 13860 },
+      { limit: 1800000, a: 0.107, b: 22500 },
+      { limit: 3600000, a: 0.143, b: 87300 },
+      { limit: 4200000, a: 0.19, b: 378000 },
+    ],
+    II: [
+      { limit: 180000, a: 0.045, b: 0 },
+      { limit: 360000, a: 0.078, b: 7020 },
+      { limit: 720000, a: 0.102, b: 16740 },
+      { limit: 1800000, a: 0.115, b: 27180 },
+      { limit: 3600000, a: 0.14, b: 90000 },
+      { limit: 4200000, a: 0.165, b: 72000 },
+    ],
+    III: [
+      { limit: 180000, a: 0.06, b: 0 },
+      { limit: 360000, a: 0.112, b: 9360 },
+      { limit: 720000, a: 0.135, b: 17640 },
+      { limit: 1800000, a: 0.16, b: 35640 },
+      { limit: 3600000, a: 0.21, b: 125640 },
+      { limit: 4200000, a: 0.33, b: 648000 },
+    ],
+    V: [
+      { limit: 180000, a: 0.16, b: 0 },
+      { limit: 360000, a: 0.18, b: 9000 },
+      { limit: 720000, a: 0.195, b: 17100 },
+      { limit: 1800000, a: 0.208, b: 25200 },
+      { limit: 3600000, a: 0.23, b: 86250 },
+      { limit: 4200000, a: 0.305, b: 720000 },
+    ],
+  };
+  return tables[annex] || tables.III;
+}
+
+function calcSimplesTaxes(fat, rbt12, annex) {
+  const table = getSimplesTable(annex);
+  const bracket = table.find(b => rbt12 <= b.limit) || table[table.length - 1];
+  const effectiveRate = rbt12 > 0 ? Math.max(0, (bracket.a * rbt12 - bracket.b) / rbt12) : 0;
+  const total = fat * effectiveRate;
+  return {
+    total,
+    effectiveRate,
+    annex,
+    deduction: bracket.b,
+    rbt12,
+    bracket,
+  };
 }
 
 function calcPresumidoTaxes(fat, baseRate) {
@@ -834,20 +875,21 @@ function calcular() {
   const fat = parseFloat(document.getElementById('faturamento').value) || 0;
   const folha = parseFloat(document.getElementById('folha').value) || 0;
   const despesas = parseFloat(document.getElementById('despesas').value) || 0;
+  const rbt12 = fat * 12;
 
-  const simplesRate = getSimplesRate(segAtual.simplesProfile, fat);
+  const simples = calcSimplesTaxes(fat, rbt12, segAtual.simplesAnnex || 'III');
   const lucro = estimateProfit(fat, folha, despesas);
   const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase);
   const real = calcRealTaxes(fat, lucro);
 
   const impostos = {
-    simples: fat * simplesRate,
+    simples: simples.total,
     presumido: presumido.total,
     real: real.total,
   };
 
   const aliquotasEfetivas = {
-    simples: simplesRate,
+    simples: simples.effectiveRate,
     presumido: presumido.effectiveRate,
     real: real.effectiveRate,
   };
@@ -905,9 +947,8 @@ function calcular() {
   });
 
   // Aliq info
-  const regiNomes = { simples: 'Simples Nacional', presumido: 'Lucro Presumido', real: 'Lucro Real' };
   document.getElementById('aliqText').innerHTML =
-    `Alíquota efetiva estimada: <strong>${pct(aliqAtual)}</strong> no ${regiNomes[regimeAtual]} para ${segAtual.nome}.`;
+    `Simples Nacional: Anexo ${simples.annex}, RBT12 ${fmt(simples.rbt12)}, dedução ${fmt(simples.deduction)}, alíquota efetiva ${pct(simples.effectiveRate)}.`;
 
   // Seg detail
   document.getElementById('segDetailText').textContent = segAtual.detail;
