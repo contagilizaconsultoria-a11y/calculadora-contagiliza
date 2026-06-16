@@ -862,17 +862,20 @@ function calcIRRF(proLabore, inssDeduction) {
   return base * 0.275 - 869.36;
 }
 
-function calcSimplesRTaxes(fat, rbt12, proLabore) {
+function calcSimplesRTaxes(fat, rbt12) {
   const simples = calcSimplesTaxes(fat, rbt12, 'III');
-  const inss = calcINSS(proLabore);
-  const irrf = calcIRRF(proLabore, inss);
+  const payrollBase = fat * 0.28;
+  const inss = payrollBase * 0.11;
+  const irrf = calcIRRF(payrollBase, inss);
   const payrollCost = Math.max(0, inss) + Math.max(0, irrf);
+  const total = simples.total + payrollCost;
   return {
-    total: simples.total,
-    effectiveRate: fat > 0 ? simples.total / fat : 0,
+    total,
+    effectiveRate: fat > 0 ? total / fat : 0,
     annex: 'III',
     deduction: simples.deduction,
     rbt12,
+    payrollBase,
     payrollCost,
     inss,
     irrf,
@@ -922,7 +925,7 @@ function calcular() {
   const rbt12 = fat * 12;
 
   const simples = calcSimplesTaxes(fat, rbt12, segAtual.simplesAnnex || 'III');
-  const simplesR = calcSimplesRTaxes(fat, rbt12, folha);
+  const simplesR = calcSimplesRTaxes(fat, rbt12);
   const lucro = estimateProfit(fat, folha, despesas);
   const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase);
   const real = calcRealTaxes(fat, lucro);
@@ -1000,7 +1003,7 @@ function calcular() {
       `Simples Nacional: Anexo ${simples.annex}, RBT12 ${fmt(simples.rbt12)}, dedução ${fmt(simples.deduction)}, alíquota efetiva ${pct(simples.effectiveRate)}.`;
   } else if (regimeAtual === 'simples_r') {
     document.getElementById('aliqText').innerHTML =
-      `Simples Nacional (Fator R): Anexo ${simplesR.annex}, RBT12 ${fmt(simplesR.rbt12)}, dedução ${fmt(simplesR.deduction)}, alíquota efetiva ${pct(simplesR.effectiveRate)}. INSS pró-labore: ${fmt(simplesR.inss)}, IRRF pró-labore: ${fmt(simplesR.irrf)}.`;
+      `Simples Nacional (Fator R): Anexo ${simplesR.annex}, RBT12 ${fmt(simplesR.rbt12)}, dedução ${fmt(simplesR.deduction)}, alíquota efetiva ${pct(simplesR.effectiveRate)}. Base folha 28%: ${fmt(simplesR.payrollBase)}, INSS 11%: ${fmt(simplesR.inss)}, IRRF: ${fmt(simplesR.irrf)}, custo total: ${fmt(simplesR.payrollCost)}.`;
   } else if (regimeAtual === 'presumido') {
     document.getElementById('aliqText').innerHTML =
       `Lucro Presumido: base presumida ${fmt(presumido.breakdown.base)}, IRPJ ${fmt(presumido.breakdown.irpj)}, CSLL ${fmt(presumido.breakdown.csll)}, PIS/COFINS ${fmt(presumido.breakdown.pisCofins)}.`;
