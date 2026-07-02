@@ -475,20 +475,20 @@
       <svg viewBox="0 0 16 16"><path d="M8 1l1.5 3 3.5.5-2.5 2.5.5 3.5L8 9l-3 1.5.5-3.5L3 4.5l3.5-.5z"/></svg>
       Simulação tributária gratuita
     </div>
-    <h1>Descubra quanto sua empresa pode <em>economizar em impostos</em></h1>
-    <p>Simule em segundos a diferença entre regimes tributários com base no perfil real do seu negócio.</p>
+    <h1>Descubra quanto sua operação no digital pode <em>economizar em impostos</em></h1>
+    <p>Simule em segundos qual regime tributário é mais benéfico com base na estrutura real da sua operação.</p>
     <div class="hero-stats">
       <div class="hero-stat">
-        <div class="val">+R$ 80k</div>
-        <div class="lbl">economia média/ano identificada</div>
+        <div class="val">+R$ 10MM</div>
+        <div class="lbl">economia recuperada</div>
       </div>
       <div class="hero-stat">
-        <div class="val">7 setores</div>
-        <div class="lbl">com cálculo personalizado</div>
+        <div class="val">+50</div>
+        <div class="lbl">empresários impactados</div>
       </div>
       <div class="hero-stat">
-        <div class="val">3 regimes</div>
-        <div class="lbl">comparados simultaneamente</div>
+        <div class="val">6 nichos</div>
+        <div class="lbl">com lógica específica</div>
       </div>
     </div>
   </div>
@@ -521,7 +521,6 @@
         <label>Regime tributário atual</label>
         <div class="regime-pills" id="regimePills">
           <button class="pill active" onclick="setRegime(this,'simples')">Simples Nacional</button>
-          <button class="pill" onclick="setRegime(this,'simples_r')">Simples Nacional (Fator R)</button>
           <button class="pill" onclick="setRegime(this,'presumido')">Lucro Presumido</button>
           <button class="pill" onclick="setRegime(this,'real')">Lucro Real</button>
         </div>
@@ -540,6 +539,14 @@
       </div>
 
       <div class="field">
+        <label>Gastos com anúncios <span>(mensal)</span></label>
+        <div class="input-wrap">
+          <span class="input-prefix">R$</span>
+          <input type="number" id="anuncios" value="5000" min="0" oninput="calcular()"/>
+        </div>
+      </div>
+
+      <div class="field">
         <label>Despesas operacionais mensais <span>(aluguel, fornecedores, insumos)</span></label>
         <div class="input-wrap">
           <span class="input-prefix">R$</span>
@@ -550,8 +557,8 @@
       <div class="field">
         <label>Margem de lucro estimada: <strong id="margemLabel">25%</strong></label>
         <div class="slider-wrap">
-          <input type="range" id="margemSlider" min="3" max="60" value="25" step="1" oninput="setMargem(this.value)"/>
-          <div class="slider-labels"><span>3%</span><span>60%</span></div>
+          <input type="range" id="margemSlider" min="0" max="90" value="25" step="1" oninput="setMargem(this.value)"/>
+          <div class="slider-labels"><span>0%</span><span>90%</span></div>
         </div>
       </div>
 
@@ -603,13 +610,6 @@
               <span class="compare-row-val" id="bar-simples-val">—</span>
             </div>
             <div class="bar-track"><div class="bar-fill current" id="bar-simples" style="width:0%"></div></div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-row-head">
-              <span class="compare-row-name">Simples Fator R</span>
-              <span class="compare-row-val" id="bar-simples_r-val">—</span>
-            </div>
-            <div class="bar-track"><div class="bar-fill alt" id="bar-simples_r" style="width:0%"></div></div>
           </div>
           <div class="compare-row">
             <div class="compare-row-head">
@@ -693,60 +693,52 @@
 // ── DATA ────────────────────────────────────────────
 const segmentos = [
   {
-    id: 'servicos', nome: 'Serviços', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>`,
-    aliquotas: { simples: 0.135, presumido: 0.138, real: 0.085 },
+    id: 'infoproduto-nacional', nome: 'Infoproduto nacional', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>`,
+    aliquotas: { simples: 0.145, presumido: 0.128, real: 0.090 },
     presumidoBase: 0.32,
     simplesAnnex: 'III',
     melhor: 'real',
-    detail: 'Para empresas de serviços com alto faturamento e margens elevadas, o Lucro Real costuma ser o mais eficiente — especialmente com folha robusta e despesas dedutíveis expressivas.',
+    detail: 'Empresas que vendem conteúdo digital no Brasil costumam ter forte impacto de anúncios e custos de produção. O regime ideal costuma depender do volume de receita e da estrutura de custos.',
   },
   {
-    id: 'comercio', nome: 'Comércio', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
-    aliquotas: { simples: 0.075, presumido: 0.058, real: 0.060 },
-    presumidoBase: 0.08,
-    simplesAnnex: 'I',
-    melhor: 'presumido',
-    detail: 'No comércio, o Lucro Presumido frequentemente é mais vantajoso pela base de cálculo mais favorável (1,6% a 8%) e menor burocracia em relação ao Lucro Real.',
-  },
-  {
-    id: 'industria', nome: 'Indústria', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>`,
-    aliquotas: { simples: 0.095, presumido: 0.085, real: 0.072 },
-    presumidoBase: 0.08,
-    simplesAnnex: 'II',
-    melhor: 'real',
-    detail: 'Indústrias se beneficiam do Lucro Real pelo aproveitamento de créditos de PIS/COFINS não cumulativos e pela dedução de insumos e depreciação de ativos.',
-  },
-  {
-    id: 'ti', nome: 'TI / Software', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M9 9l2 2 4-4"/></svg>`,
+    id: 'infoproduto-global', nome: 'Infoproduto global', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M2 12h20"/><path d="M12 2a15 15 0 010 20"/><path d="M12 2a15 15 0 000 20"/></svg>`,
     aliquotas: { simples: 0.155, presumido: 0.138, real: 0.092 },
     presumidoBase: 0.32,
-    simplesAnnex: 'V',
+    simplesAnnex: 'III',
     melhor: 'real',
-    detail: 'Empresas de TI com receitas de software (SaaS, licenças) se enquadram no Anexo V ou VI do Simples, com alíquotas elevadas. O Lucro Real permite compensar créditos de P&D e salários como base para redução tributária.',
+    detail: 'Operações com clientes internacionais geralmente exigem atenção às receitas, tributação na origem e estrutura de publicidade. O Lucro Real tende a ganhar relevância quando há despesas dedutíveis importantes.',
   },
   {
-    id: 'saude', nome: 'Saúde', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
-    aliquotas: { simples: 0.135, presumido: 0.115, real: 0.080 },
+    id: 'nutra-nacional', nome: 'Nutra nacional', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12h6"/></svg>`,
+    aliquotas: { simples: 0.135, presumido: 0.118, real: 0.085 },
     presumidoBase: 0.32,
     simplesAnnex: 'III',
     melhor: 'real',
-    detail: 'Clínicas e laboratórios com alto volume de folha podem reduzir significativamente a carga com o Lucro Real, além de deduzir equipamentos e infraestrutura hospitalar.',
+    detail: 'Marcas de nutrição e saúde digital têm custo alto com aquisição e produção. O regime mais eficiente costuma variar com a margem e com a concentração de anúncios.',
   },
   {
-    id: 'construcao', nome: 'Construção Civil', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="3 22 21 22 12 2"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-    aliquotas: { simples: 0.105, presumido: 0.080, real: 0.068 },
-    presumidoBase: 0.16,
+    id: 'nutra-global', nome: 'Nutra global', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M5 8c2 2 4 3 7 3s5-1 7-3"/><path d="M5 16c2-2 4-3 7-3s5 1 7 3"/></svg>`,
+    aliquotas: { simples: 0.148, presumido: 0.132, real: 0.088 },
+    presumidoBase: 0.32,
     simplesAnnex: 'III',
     melhor: 'real',
-    detail: 'Na construção civil, o Lucro Real é interessante pela capacidade de deduzir materiais, subempreiteiros e depreciação de máquinas. O RET (Regime Especial de Tributação) pode ser ainda mais vantajoso para incorporadoras.',
+    detail: 'Operações globais de nutrição podem ter estruturas com forte apelo de tráfego pago e custos de logística. A análise tributária precisa considerar receitas, marketing e custos de operação.',
   },
   {
-    id: 'transporte', nome: 'Transporte', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
-    aliquotas: { simples: 0.090, presumido: 0.058, real: 0.055 },
-    presumidoBase: 0.08,
+    id: 'mentorias', nome: 'Mentorias', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V9l8-5 8 5v10"/><path d="M8 12h8"/><path d="M8 16h5"/></svg>`,
+    aliquotas: { simples: 0.130, presumido: 0.122, real: 0.082 },
+    presumidoBase: 0.32,
     simplesAnnex: 'III',
-    melhor: 'presumido',
-    detail: 'No transporte de cargas, o Lucro Presumido com base de 8% sobre o faturamento é historicamente o regime mais equilibrado. O Lucro Real compensa somente quando há muitos custos dedutíveis (frotas, manutenção, diesel).',
+    melhor: 'real',
+    detail: 'Mentorias e programas de alto ticket costumam ter margens mais elevadas e menor custo operacional. Nessa estrutura, o regime pode variar bastante conforme o volume de receita e de despesas dedutíveis.',
+  },
+  {
+    id: 'cursos-online', nome: 'Cursos on-line', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h8"/><path d="M17 17l2 2 4-4"/></svg>`,
+    aliquotas: { simples: 0.142, presumido: 0.126, real: 0.086 },
+    presumidoBase: 0.32,
+    simplesAnnex: 'III',
+    melhor: 'real',
+    detail: 'Cursos digitais frequentemente têm escala alta com baixo custo de produção e forte investimento em tráfego. A simulação precisa olhar para a relação entre receita, anúncios e margem.',
   },
 ];
 
