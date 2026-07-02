@@ -855,7 +855,7 @@ function calcIRRF(proLabore, inssDeduction) {
 }
 
 function calcSimplesRTaxes(fat, rbt12) {
-  const simples = calcSimplesTaxes(fat, rbt12, 'III');
+  const simples = calcSimplesTaxes(fat, rbt12, 'V');
   const payrollBase = fat * 0.28;
   const inss = payrollBase * 0.11;
   const irrf = calcIRRF(payrollBase, inss);
@@ -864,7 +864,7 @@ function calcSimplesRTaxes(fat, rbt12) {
   return {
     total,
     effectiveRate: fat > 0 ? total / fat : 0,
-    annex: 'III',
+    annex: 'V',
     deduction: simples.deduction,
     rbt12,
     payrollBase,
@@ -876,7 +876,17 @@ function calcSimplesRTaxes(fat, rbt12) {
   };
 }
 
-function calcPresumidoTaxes(fat, baseRate) {
+function calcPresumidoTaxes(fat, baseRate, fixedRate) {
+  if (fixedRate != null) {
+    const total = fat * fixedRate;
+    return {
+      total,
+      effectiveRate: fixedRate,
+      breakdown: { base: null, irpj: null, csll: null, pisCofins: null },
+      fixedRate: true,
+    };
+  }
+
   const base = fat * baseRate;
   const irpj = base * 0.15;
   const csll = base * 0.09;
@@ -886,6 +896,7 @@ function calcPresumidoTaxes(fat, baseRate) {
     total,
     effectiveRate: fat > 0 ? total / fat : 0,
     breakdown: { base, irpj, csll, pisCofins },
+    fixedRate: false,
   };
 }
 
@@ -916,10 +927,10 @@ function calcular() {
   const despesas = parseFloat(document.getElementById('despesas').value) || 0;
   const rbt12 = fat * 12;
 
-  const simples = calcSimplesTaxes(fat, rbt12, segAtual.simplesAnnex || 'III');
+  const simples = calcSimplesTaxes(fat, rbt12, 'V');
   const simplesR = calcSimplesRTaxes(fat, rbt12);
   const lucro = estimateProfit(fat, folha, despesas);
-  const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase);
+  const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase, 0.0228);
   const real = calcRealTaxes(fat, lucro);
 
   const impostos = {
