@@ -990,19 +990,8 @@ function calcular() {
   });
 
   // Aliq info
-  if (regimeAtual === 'simples') {
-    document.getElementById('aliqText').innerHTML =
-      `Simples Nacional: Anexo ${simples.annex}, RBT12 ${fmt(simples.rbt12)}, dedução ${fmt(simples.deduction)}, alíquota efetiva ${pct(simples.effectiveRate)}.`;
-  } else if (regimeAtual === 'simples_r') {
-    document.getElementById('aliqText').innerHTML =
-      `Simples Nacional (Fator R): Anexo ${simplesR.annex}, RBT12 ${fmt(simplesR.rbt12)}, dedução ${fmt(simplesR.deduction)}, alíquota efetiva ${pct(simplesR.effectiveRate)}. Base folha 28%: ${fmt(simplesR.payrollBase)}, INSS 11%: ${fmt(simplesR.inss)}, IRRF: ${fmt(simplesR.irrf)}, custo total: ${fmt(simplesR.payrollCost)}.`;
-  } else if (regimeAtual === 'presumido') {
-    document.getElementById('aliqText').innerHTML =
-      `Lucro Presumido: base presumida ${fmt(presumido.breakdown.base)}, IRPJ ${fmt(presumido.breakdown.irpj)}, CSLL ${fmt(presumido.breakdown.csll)}, PIS/COFINS ${fmt(presumido.breakdown.pisCofins)}.`;
-  } else {
-    document.getElementById('aliqText').innerHTML =
-      `Lucro Real: lucro estimado ${fmt(real.breakdown.profit)}, IRPJ ${fmt(real.breakdown.irpj)}, CSLL ${fmt(real.breakdown.csll)}, PIS/COFINS ${fmt(real.breakdown.pisCofins)}.`;
-  }
+  document.getElementById('aliqText').textContent =
+    'Simulação de regimes tributários para infoprodutores — compare o impacto de cada opção.';
 
   // Seg detail
   document.getElementById('segDetailText').textContent = segAtual.detail;
