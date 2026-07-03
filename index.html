@@ -627,6 +627,23 @@
           </div>
         </div>
 
+        <!-- Presumido breakdown -->
+        <div class="compare-section" id="presumido-breakdown" style="margin-top:12px;">
+          <div class="compare-title">Detalhamento — Lucro Presumido</div>
+          <div class="result-row">
+            <span class="result-lbl">Base presumida (8% do faturamento)</span>
+            <span class="result-val" id="pres-base">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-lbl">IRPJ (15%)</span>
+            <span class="result-val" id="pres-irpj">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-lbl">CSLL (9%)</span>
+            <span class="result-val" id="pres-csll">—</span>
+          </div>
+        </div>
+
         <!-- CTA -->
         <div class="cta-block">
           <p>Quer uma análise personalizada com os dados reais da sua empresa?</p>
@@ -998,6 +1015,16 @@ function calcular() {
 
   // Seg detail
   document.getElementById('segDetailText').textContent = segAtual.detail;
+
+  // Presumido breakdown
+  try {
+    const presBr = presumido.breakdown || {};
+    document.getElementById('pres-base').textContent = presBr.base ? fmt(presBr.base) : fmt(presumido.presumption * fat);
+    document.getElementById('pres-irpj').textContent = presBr.irpj ? fmt(presBr.irpj) : fmt((presumido.presumption * fat) * 0.15);
+    document.getElementById('pres-csll').textContent = presBr.csll ? fmt(presBr.csll) : fmt((presumido.presumption * fat) * 0.09);
+  } catch (e) {
+    // noop
+  }
 
   // Modal eco
   document.getElementById('modalEcoVal').textContent = fmt(ecoAnual);
