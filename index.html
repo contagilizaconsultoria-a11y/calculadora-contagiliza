@@ -894,17 +894,21 @@ function calcSimplesRTaxes(fat, rbt12) {
 }
 
 function calcPresumidoTaxes(fat, baseRate, fixedRate) {
-  // Sempre usar presunção de 8% sobre faturamento (segmento comércio)
-  const presumption = 0.08;
-  const base = fat * presumption;
-  const irpj = base * 0.15; // 15% sobre a base presumida
-  const csll = base * 0.09; // 9% sobre a base presumida
+  // Bases de presunção separadas:
+  // IRPJ utiliza 8% de presunção; CSLL utiliza 12% de presunção (comércio)
+  const presumptionIRPJ = 0.08;
+  const presumptionCSLL = 0.12;
+  const baseIRPJ = fat * presumptionIRPJ;
+  const baseCSLL = fat * presumptionCSLL;
+  const irpj = baseIRPJ * 0.15; // 15% sobre a base presumida do IRPJ
+  const csll = baseCSLL * 0.09; // 9% sobre a base presumida da CSLL
   const total = irpj + csll;
   return {
     total,
     effectiveRate: fat > 0 ? total / fat : 0,
-    breakdown: { base, irpj, csll },
-    presumption,
+    breakdown: { baseIRPJ, baseCSLL, irpj, csll },
+    presumptionIRPJ,
+    presumptionCSLL,
   };
 }
 
@@ -1019,9 +1023,13 @@ function calcular() {
   // Presumido breakdown
   try {
     const presBr = presumido.breakdown || {};
-    document.getElementById('pres-base').textContent = presBr.base ? fmt(presBr.base) : fmt(presumido.presumption * fat);
-    document.getElementById('pres-irpj').textContent = presBr.irpj ? fmt(presBr.irpj) : fmt((presumido.presumption * fat) * 0.15);
-    document.getElementById('pres-csll').textContent = presBr.csll ? fmt(presBr.csll) : fmt((presumido.presumption * fat) * 0.09);
+    const baseIRPJ = presBr.baseIRPJ != null ? presBr.baseIRPJ : (presumido.presumptionIRPJ || 0.08) * fat;
+    const baseCSLL = presBr.baseCSLL != null ? presBr.baseCSLL : (presumido.presumptionCSLL || 0.12) * fat;
+    const irpjVal = presBr.irpj != null ? presBr.irpj : baseIRPJ * 0.15;
+    const csllVal = presBr.csll != null ? presBr.csll : baseCSLL * 0.09;
+    document.getElementById('pres-base').textContent = fmt(baseIRPJ) + ' (IRPJ base) / ' + fmt(baseCSLL) + ' (CSLL base)';
+    document.getElementById('pres-irpj').textContent = fmt(irpjVal);
+    document.getElementById('pres-csll').textContent = fmt(csllVal);
   } catch (e) {
     // noop
   }
