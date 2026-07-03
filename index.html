@@ -912,7 +912,7 @@ function calcIRRF(proLabore, inssDeduction) {
 }
 
 function calcSimplesRTaxes(fat, rbt12) {
-  const simples = calcSimplesTaxes(fat, rbt12, 'V');
+  const simples = calcSimplesTaxes(fat, rbt12, 'III');
   const payrollBase = fat * 0.28;
   const inss = payrollBase * 0.11;
   const irrf = calcIRRF(payrollBase, inss);
@@ -989,7 +989,7 @@ function calcular() {
   const despesas = parseMoneyInput(document.getElementById('despesas').value);
   const rbt12 = fat * 12;
 
-  const simples = calcSimplesTaxes(fat, rbt12, 'V');
+  const simples = calcSimplesTaxes(fat, rbt12, 'III');
   const simplesR = calcSimplesRTaxes(fat, rbt12);
   const lucro = estimateProfit(fat, folha, despesas);
   const presumido = calcPresumidoTaxes(fat);
