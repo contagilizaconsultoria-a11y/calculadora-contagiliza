@@ -139,6 +139,53 @@
   .hero-stat .val { color: white; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
   .hero-stat .lbl { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 2px; }
 
+  .about-section {
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(13, 43, 78, 0.12);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 2rem;
+    margin: -2rem auto 1.5rem;
+    max-width: 1100px;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .about-copy h2 {
+    margin-bottom: 1rem;
+    font-size: clamp(1.8rem, 2.4vw, 2.5rem);
+    color: var(--navy);
+    letter-spacing: -0.03em;
+  }
+  .about-copy p {
+    margin-bottom: 1rem;
+    color: var(--gray-700);
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  .about-stats {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .about-stat {
+    background: var(--blue-light);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    color: var(--navy);
+    line-height: 1.6;
+  }
+  .about-stat strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 700;
+  }
+  @media (max-width: 820px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
   /* ── MAIN LAYOUT ── */
   .main-wrap {
     max-width: 1100px; margin: -2.5rem auto 0;
@@ -543,6 +590,21 @@
     </div>
   </div>
 </div>
+
+<!-- ABOUT -->
+<section class="about-section">
+  <div class="about-grid">
+    <div class="about-copy">
+      <h2>Sobre a Contagiliza Contabilidade</h2>
+      <p>Fundada em março de 2022, a Contagiliza é uma empresa de contabilidade digital, natural de Fortaleza/CE, que atua prestando assessoria contábil, fiscal, previdenciária e financeira para empresários espalhados por todo o Brasil.</p>
+      <p>Possuímos expertise nos âmbitos contábil, fiscal, previdenciário e financeiro. Prezamos pela integridade, eficiência e efetividade na comunicação, para fornecer um atendimento personalizado e focado nos gargalos do dia a dia.</p>
+    </div>
+    <div class="about-stats">
+      <div class="about-stat"><strong>Héber Martins</strong>• 10 anos de experiência; • Formado pela UFC; • Assessor contábil e financeiro; • Expertise trabalhista e previdenciária.</div>
+      <div class="about-stat"><strong>Hemerson Martins</strong>• 12 anos de experiência; • Formado pela Estácio FIC; • Expertise tributária: simples nacional, lucro presumido e presumido; • Especialista em conformidades fiscais (SEFAZ, RFB, etc.).</div>
+    </div>
+  </div>
+</section>
 
 <!-- MAIN -->
 <div class="main-wrap">
