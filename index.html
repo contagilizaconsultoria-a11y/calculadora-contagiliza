@@ -446,6 +446,46 @@
     .segment-grid { grid-template-columns: repeat(3, 1fr); }
     .economy-number { font-size: 2.2rem; }
   }
+
+  /* Compact mobile: tighten spacings and font sizes for small viewports */
+  @media (max-width: 420px) {
+    .hero { padding: 2rem 0.75rem 1.5rem; }
+    .hero h1 { font-size: 1.25rem; }
+    .hero p { font-size: 0.95rem; }
+    .hero-stats { display: none; }
+
+    .main-wrap { padding: 0 0.75rem 2rem; }
+    .card, .results-card, .segment-section { padding: 0.75rem; }
+    .section-label { font-size: 11px; }
+
+    .calc-grid { gap: 0.75rem; }
+    .input-wrap input { padding: 8px 10px 8px 34px; font-size: 13px; }
+    .input-prefix { left: 10px; }
+
+    .seg-btn { padding: 10px 8px; }
+    .seg-icon { width: 28px; height: 28px; border-radius: 8px; }
+    .seg-name { font-size: 11px; }
+
+    .results-card { border-width: 1px; }
+    .results-header { padding: 10px 12px; }
+    .economy-number { font-size: 1.6rem; }
+    .economy-sub { font-size: 11px; }
+
+    .result-row { padding: 8px 0; }
+    .result-lbl { font-size: 12px; }
+    .result-val { font-size: 13px; }
+
+    .compare-row-head { font-size: 11px; }
+    .bar-track { height: 6px; }
+
+    .cta-block { padding: 10px; }
+    .btn-cta-big { padding: 10px; font-size: 13px; }
+
+    .whatsapp-btn { width: 44px; height: 44px; bottom: 14px; right: 14px; }
+
+    #presumido-breakdown .result-lbl, #presumido-breakdown .result-val { font-size: 12px; }
+    #presumido-breakdown { margin-top: 8px; }
+  }
 </style>
 </head>
 <body>
