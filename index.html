@@ -1026,7 +1026,19 @@ function calcular() {
     if (valEl) valEl.textContent = fmt(impostoVal) + ' / mês';
   });
 
-  // Aliq info (kept in HTML)
+  // Aliq info: show description based on selected regime
+  try {
+    const aliqEl = document.getElementById('aliqText');
+    if (regimeAtual === 'simples' || regimeAtual === 'simples_r') {
+      aliqEl.textContent = 'Regime tributário simplificado baseado em 5 anexos, onde o imposto calculado sempre irá aumentar ou reduzir se o faturamento crescer o diminuir (ou seja, quanto maior o faturamento, maior o imposto, e vice-versa).';
+    } else if (regimeAtual === 'presumido') {
+      aliqEl.textContent = 'Regime tributário onde a alíquota é relativamente fixa e a tributação baseia-se na presunção de lucro da operação definida pelo fisco.';
+    } else {
+      aliqEl.textContent = '';
+    }
+  } catch (e) {
+    // noop
+  }
 
   // Seg detail
   document.getElementById('segDetailText').textContent = segAtual.detail;
