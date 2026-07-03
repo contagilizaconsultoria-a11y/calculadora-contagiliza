@@ -86,6 +86,13 @@
   .btn-contact:active { transform: translateY(0); }
   .btn-contact svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; }
 
+  /* Mobile-specific contact button handling */
+  .btn-contact-mobile { display: none; }
+  @media (max-width: 420px) {
+    .btn-contact-mobile { display: inline-flex; }
+    .header-cta .btn-contact { display: none; }
+  }
+
   /* ── HERO ── */
   .hero {
     background: linear-gradient(160deg, var(--navy) 0%, #0F3564 60%, #133D73 100%);
@@ -499,7 +506,12 @@
       </div>
       <span class="logo-name">Calculadora<span>Contagiliza</span></span>
     </div>
-    <!-- header-cta removed; contact button moved near Passo 1 -->
+    <div class="header-cta">
+      <button class="btn-contact" onclick="openModal()">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Falar com especialista
+      </button>
+    </div>
   </div>
 </header>
 
@@ -533,8 +545,8 @@
 <div class="main-wrap">
 
   <!-- SEGMENT PICKER -->
-  <div style="text-align:right; margin:0 0 12px 0;">
-    <button class="btn-contact" onclick="openModal()">
+  <div class="contact-mobile-wrap" style="text-align:right; margin:0 0 12px 0;">
+    <button class="btn-contact btn-contact-mobile" onclick="openModal()">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       Falar com especialista
     </button>
