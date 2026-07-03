@@ -513,7 +513,7 @@
         <label>Faturamento bruto mensal <span>(receita total antes de deduções)</span></label>
         <div class="input-wrap">
           <span class="input-prefix">R$</span>
-          <input type="number" id="faturamento" value="150000" min="0" oninput="calcular()"/>
+          <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="faturamento" value="150000" oninput="calcular()"/>
         </div>
       </div>
 
@@ -534,7 +534,7 @@
         <label>Folha de pagamento mensal <span>(salários + encargos)</span></label>
         <div class="input-wrap">
           <span class="input-prefix">R$</span>
-          <input type="number" id="folha" value="40000" min="0" oninput="calcular()"/>
+          <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="folha" value="40000" oninput="calcular()"/>
         </div>
       </div>
 
@@ -542,7 +542,7 @@
         <label>Gastos com anúncios <span>(mensal)</span></label>
         <div class="input-wrap">
           <span class="input-prefix">R$</span>
-          <input type="number" id="anuncios" value="5000" min="0" oninput="calcular()"/>
+          <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="anuncios" value="5000" oninput="calcular()"/>
         </div>
       </div>
 
@@ -550,7 +550,7 @@
         <label>Despesas operacionais mensais <span>(aluguel, fornecedores, insumos)</span></label>
         <div class="input-wrap">
           <span class="input-prefix">R$</span>
-          <input type="number" id="despesas" value="35000" min="0" oninput="calcular()"/>
+          <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="despesas" value="35000" oninput="calcular()"/>
         </div>
       </div>
 
@@ -877,26 +877,18 @@ function calcSimplesRTaxes(fat, rbt12) {
 }
 
 function calcPresumidoTaxes(fat, baseRate, fixedRate) {
-  if (fixedRate != null) {
-    const total = fat * fixedRate;
-    return {
-      total,
-      effectiveRate: fixedRate,
-      breakdown: { base: null, irpj: null, csll: null, pisCofins: null },
-      fixedRate: true,
-    };
-  }
-
-  const base = fat * baseRate;
-  const irpj = base * 0.15;
-  const csll = base * 0.09;
-  const pisCofins = fat * 0.0365;
+  // Sempre usar presunção de 8% sobre faturamento (segmento comércio)
+  const presumption = 0.08;
+  const base = fat * presumption;
+  const irpj = base * 0.15; // 15% sobre a base presumida
+  const csll = base * 0.09; // 9% sobre a base presumida
+  const pisCofins = fat * 0.0365; // manutenção do PIS/COFINS padrão
   const total = irpj + csll + pisCofins;
   return {
     total,
     effectiveRate: fat > 0 ? total / fat : 0,
     breakdown: { base, irpj, csll, pisCofins },
-    fixedRate: false,
+    presumption,
   };
 }
 
@@ -912,6 +904,16 @@ function calcRealTaxes(fat, profit) {
   };
 }
 
+function parseMoneyInput(value) {
+  const normalized = String(value || '')
+    .trim()
+    .replace(/\./g, '')
+    .replace(/,/g, '.')
+    .replace(/[^0-9.-]/g, '');
+  const parsed = parseFloat(normalized);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 // ── FORMAT ─────────────────────────────────────────
 function fmt(v) {
   return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
@@ -922,15 +924,15 @@ function pct(v) {
 
 // ── CALCULAR ───────────────────────────────────────
 function calcular() {
-  const fat = parseFloat(document.getElementById('faturamento').value) || 0;
-  const folha = parseFloat(document.getElementById('folha').value) || 0;
-  const despesas = parseFloat(document.getElementById('despesas').value) || 0;
+  const fat = parseMoneyInput(document.getElementById('faturamento').value);
+  const folha = parseMoneyInput(document.getElementById('folha').value);
+  const despesas = parseMoneyInput(document.getElementById('despesas').value);
   const rbt12 = fat * 12;
 
   const simples = calcSimplesTaxes(fat, rbt12, 'V');
   const simplesR = calcSimplesRTaxes(fat, rbt12);
   const lucro = estimateProfit(fat, folha, despesas);
-  const presumido = calcPresumidoTaxes(fat, segAtual.presumidoBase, 0.0228);
+  const presumido = calcPresumidoTaxes(fat);
   const real = calcRealTaxes(fat, lucro);
 
   const impostos = {
@@ -957,16 +959,7 @@ function calcular() {
     if (impostos[r] < menorImposto) { menorImposto = impostos[r]; melhorId = r; }
   });
 
-  // if current is already best, pick second best
-  let recomendado = melhorId;
-  if (melhorId === regimeAtual) {
-    let secondBest = null; let secondVal = Infinity;
-    Object.keys(impostos).forEach(r => {
-      if (r !== regimeAtual && impostos[r] < secondVal) { secondVal = impostos[r]; secondBest = r; }
-    });
-    recomendado = secondBest || melhorId;
-  }
-
+  const recomendado = melhorId;
   const impostoNovo = impostos[recomendado];
   const aliqNova = aliquotasEfetivas[recomendado];
   const ecoMensal = Math.max(0, atual - impostoNovo);
