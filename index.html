@@ -581,7 +581,7 @@
         </div>
         <div class="aliq-info" id="aliqInfo" style="margin-top:8px;">
           <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.75.75 0 110 1.5A.75.75 0 018 4zm0 3.25c.414 0 .75.336.75.75v3a.75.75 0 01-1.5 0V8a.75.75 0 01.75-.75z"/></svg>
-          <span id="aliqText">Alíquota efetiva estimada: <strong>12,5%</strong> sobre o faturamento para este segmento e faixa.</span>
+          <span id="aliqText">simples nacional: regime tributário simplificado baseado em 5 anexos, onde o imposto calculado sempre irá aumentar ou reduzir se o faturamento crescer o diminuir (ou seja, quanto maior o faturamento, maior o imposto, e vice-versa).<br><br>lucro presumido: regime tributário onde a alíquota é relativamente fixa e a tributação baseia-se na presunção de lucro da operação definida pelo fisco.</span>
         </div>
       </div>
 
@@ -1026,8 +1026,7 @@ function calcular() {
     if (valEl) valEl.textContent = fmt(impostoVal) + ' / mês';
   });
 
-  // Aliq info
-  document.getElementById('aliqText').textContent = '';
+  // Aliq info (kept in HTML)
 
   // Seg detail
   document.getElementById('segDetailText').textContent = segAtual.detail;
