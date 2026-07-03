@@ -499,12 +499,7 @@
       </div>
       <span class="logo-name">Calculadora<span>Contagiliza</span></span>
     </div>
-    <div class="header-cta">
-      <button class="btn-contact" onclick="openModal()">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Falar com especialista
-      </button>
-    </div>
+    <!-- header-cta removed; contact button moved near Passo 1 -->
   </div>
 </header>
 
@@ -538,6 +533,12 @@
 <div class="main-wrap">
 
   <!-- SEGMENT PICKER -->
+  <div style="text-align:right; margin:0 0 12px 0;">
+    <button class="btn-contact" onclick="openModal()">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Falar com especialista
+    </button>
+  </div>
   <div class="segment-section">
     <div class="section-label">Passo 1 — Selecione o segmento da sua empresa</div>
     <div class="segment-grid" id="segGrid"></div>
