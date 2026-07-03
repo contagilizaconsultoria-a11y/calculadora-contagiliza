@@ -882,12 +882,11 @@ function calcPresumidoTaxes(fat, baseRate, fixedRate) {
   const base = fat * presumption;
   const irpj = base * 0.15; // 15% sobre a base presumida
   const csll = base * 0.09; // 9% sobre a base presumida
-  const pisCofins = fat * 0.0365; // manutenção do PIS/COFINS padrão
-  const total = irpj + csll + pisCofins;
+  const total = irpj + csll;
   return {
     total,
     effectiveRate: fat > 0 ? total / fat : 0,
-    breakdown: { base, irpj, csll, pisCofins },
+    breakdown: { base, irpj, csll },
     presumption,
   };
 }
