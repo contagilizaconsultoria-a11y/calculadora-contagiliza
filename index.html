@@ -562,7 +562,6 @@
         <div class="regime-pills" id="regimePills">
           <button class="pill active" onclick="setRegime(this,'simples')">Simples Nacional</button>
           <button class="pill" onclick="setRegime(this,'presumido')">Lucro Presumido</button>
-          <button class="pill" onclick="setRegime(this,'real')">Lucro Real</button>
         </div>
         <div class="aliq-info" id="aliqInfo" style="margin-top:8px;">
           <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.75.75 0 110 1.5A.75.75 0 018 4zm0 3.25c.414 0 .75.336.75.75v3a.75.75 0 01-1.5 0V8a.75.75 0 01.75-.75z"/></svg>
@@ -570,37 +569,7 @@
         </div>
       </div>
 
-      <div class="field">
-        <label>Folha de pagamento mensal <span>(salários + encargos)</span></label>
-        <div class="input-wrap">
-          <span class="input-prefix">R$</span>
-          <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="folha" value="40000" oninput="calcular()"/>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Gastos com anúncios <span>(mensal)</span></label>
-        <div class="input-wrap">
-          <span class="input-prefix">R$</span>
-          <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="anuncios" value="5000" oninput="calcular()"/>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Despesas operacionais mensais <span>(aluguel, fornecedores, insumos)</span></label>
-        <div class="input-wrap">
-          <span class="input-prefix">R$</span>
-          <input type="text" inputmode="decimal" pattern="[0-9.,]*" id="despesas" value="35000" oninput="calcular()"/>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Margem de lucro estimada: <strong id="margemLabel">25%</strong></label>
-        <div class="slider-wrap">
-          <input type="range" id="margemSlider" min="0" max="90" value="25" step="1" oninput="setMargem(this.value)"/>
-          <div class="slider-labels"><span>0%</span><span>90%</span></div>
-        </div>
-      </div>
+      <!-- Removed payroll, ads, expenses and margin inputs (not needed without Lucro Real) -->
 
       <div class="seg-detail" id="segDetail">
         <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.75.75 0 110 1.5A.75.75 0 018 4zm0 3.25c.414 0 .75.336.75.75v3a.75.75 0 01-1.5 0V8a.75.75 0 01.75-.75z"/></svg>
@@ -658,13 +627,7 @@
             </div>
             <div class="bar-track"><div class="bar-fill alt" id="bar-presumido" style="width:0%"></div></div>
           </div>
-          <div class="compare-row">
-            <div class="compare-row-head">
-              <span class="compare-row-name">Lucro Real</span>
-              <span class="compare-row-val" id="bar-real-val">—</span>
-            </div>
-            <div class="bar-track"><div class="bar-fill best" id="bar-real" style="width:0%"></div></div>
-          </div>
+          <!-- Lucro Real removed from comparison -->
         </div>
 
         <!-- Presumido breakdown -->
@@ -985,37 +948,31 @@ function pct(v) {
 // ── CALCULAR ───────────────────────────────────────
 function calcular() {
   const fat = parseMoneyInput(document.getElementById('faturamento').value);
-  const folha = parseMoneyInput(document.getElementById('folha').value);
-  const despesas = parseMoneyInput(document.getElementById('despesas').value);
   const rbt12 = fat * 12;
 
   const simples = calcSimplesTaxes(fat, rbt12, 'III');
   const simplesR = calcSimplesRTaxes(fat, rbt12);
-  const lucro = estimateProfit(fat, folha, despesas);
   const presumido = calcPresumidoTaxes(fat);
-  const real = calcRealTaxes(fat, lucro);
 
   const impostos = {
     simples: simples.total,
     simples_r: simplesR.total,
     presumido: presumido.total,
-    real: real.total,
   };
 
   const aliquotasEfetivas = {
     simples: simples.effectiveRate,
     simples_r: simplesR.effectiveRate,
     presumido: presumido.effectiveRate,
-    real: real.effectiveRate,
   };
 
   const atual = impostos[regimeAtual];
   const aliqAtual = aliquotasEfetivas[regimeAtual];
 
-  // find best
+  // find best among available regimes
   let melhorId = 'simples';
   let menorImposto = impostos.simples;
-  ['simples_r','presumido','real'].forEach(r => {
+  ['simples_r','presumido'].forEach(r => {
     if (impostos[r] < menorImposto) { menorImposto = impostos[r]; melhorId = r; }
   });
 
@@ -1027,7 +984,7 @@ function calcular() {
 
   // RENDER RESULTS
   document.getElementById('r-atual').textContent = fmt(atual);
-  document.getElementById('r-melhor').textContent = { simples: 'Simples Nacional', simples_r: 'Simples Nacional (Fator R)', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado];
+  document.getElementById('r-melhor').textContent = { simples: 'Simples Nacional', simples_r: 'Simples Nacional (Fator R)', presumido: 'Lucro Presumido' }[recomendado];
   document.getElementById('r-novo').textContent = fmt(impostoNovo);
   document.getElementById('r-mensal').textContent = fmt(ecoMensal);
   document.getElementById('r-aliq-atual').textContent = pct(aliqAtual);
@@ -1039,12 +996,12 @@ function calcular() {
   ecoEl.classList.toggle('positive', ecoAnual > 0);
 
   document.getElementById('ecoSub').textContent = ecoAnual > 0
-    ? `Migração de ${regimeAtual === 'simples' ? 'Simples Nacional' : regimeAtual === 'simples_r' ? 'Simples Nacional (Fator R)' : regimeAtual === 'presumido' ? 'Lucro Presumido' : 'Lucro Real'} → ${{ simples: 'Simples Nacional', simples_r: 'Simples Nacional (Fator R)', presumido: 'Lucro Presumido', real: 'Lucro Real' }[recomendado]}`
+    ? `Migração de ${regimeAtual === 'simples' ? 'Simples Nacional' : regimeAtual === 'simples_r' ? 'Simples Nacional (Fator R)' : 'Lucro Presumido'} → ${ { simples: 'Simples Nacional', simples_r: 'Simples Nacional (Fator R)', presumido: 'Lucro Presumido' }[recomendado] }`
     : 'Ajuste os dados para ver o potencial de economia.';
 
   // Bars
   const maxImp = Math.max(...Object.values(impostos));
-  ['simples','simples_r','presumido','real'].forEach(r => {
+  ['simples','simples_r','presumido'].forEach(r => {
     const impostoVal = impostos[r] || 0;
     const pctBar = maxImp > 0 ? Math.round((impostoVal / maxImp) * 100) : 0;
     const el = document.getElementById('bar-' + r);
