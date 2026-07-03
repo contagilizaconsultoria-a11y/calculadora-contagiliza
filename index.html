@@ -88,9 +88,12 @@
 
   /* Mobile-specific contact button handling */
   .btn-contact-mobile { display: none; }
+  .contact-mobile-wrap { text-align: center; }
   @media (max-width: 420px) {
     .btn-contact-mobile { display: inline-flex; }
     .header-cta .btn-contact { display: none; }
+    .contact-mobile-wrap { display: flex; justify-content: center; align-items: flex-end; }
+    .contact-mobile-wrap .btn-contact { margin-bottom: 12px; }
   }
 
   /* ── HERO ── */
@@ -545,8 +548,8 @@
 <div class="main-wrap">
 
   <!-- SEGMENT PICKER -->
-  <div class="contact-mobile-wrap" style="text-align:right; margin:0 0 12px 0;">
-    <button class="btn-contact btn-contact-mobile" onclick="openModal()">
+  <div class="contact-mobile-wrap" style="text-align:center; margin:0 0 12px 0;">
+    <button class="btn-contact btn-contact-mobile" onclick="openModal()" style="align-self:flex-end">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       Falar com especialista
     </button>
