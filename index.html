@@ -1264,11 +1264,30 @@ function atualizarBotaoSimulacao() {
   const btn = document.getElementById('btnSimulacao');
   btn.disabled = !dadosSimulacaoValidos();
 }
+// Cole aqui a URL do seu Google Apps Script (Web App) após publicar. Ex.: https://script.google.com/macros/s/XXXX/exec
+const LEADS_ENDPOINT = '';
+
+function enviarLead() {
+  if (!LEADS_ENDPOINT) return; // ainda não configurado — nada é enviado
+  const dados = new URLSearchParams({
+    nome: document.getElementById('sim-nome').value.trim(),
+    email: document.getElementById('sim-email').value.trim(),
+    contato: document.getElementById('sim-contato').value.trim(),
+    segmento: segAtual ? segAtual.nome : '',
+    faturamento: document.getElementById('faturamento').value.trim(),
+    regime: regimeAtual,
+    origem: 'Calculadora Contagiliza',
+  });
+  // Envio em segundo plano; não bloqueia a experiência do usuário.
+  fetch(LEADS_ENDPOINT, { method: 'POST', mode: 'no-cors', body: dados }).catch(() => {});
+}
+
 function liberarSimulacao() {
   if (!dadosSimulacaoValidos()) {
     alert('Preencha nome, e-mail e contato para receber sua simulação.');
     return;
   }
+  enviarLead();
   calcular();
   const card = document.getElementById('resultsCard');
   card.style.display = 'block';
