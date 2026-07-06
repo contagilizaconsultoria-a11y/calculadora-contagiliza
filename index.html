@@ -1264,8 +1264,8 @@ function atualizarBotaoSimulacao() {
   const btn = document.getElementById('btnSimulacao');
   btn.disabled = !dadosSimulacaoValidos();
 }
-// Cole aqui a URL do seu Google Apps Script (Web App) após publicar. Ex.: https://script.google.com/macros/s/XXXX/exec
-const LEADS_ENDPOINT = '';
+// URL do Google Apps Script (Web App) que grava os leads na planilha.
+const LEADS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz1ZpFcM-maLoX8ol6JB1KOFZLMQLJQjbZgd-F5kZBTJzOg4NzSON4I40VL3543bIwi/exec';
 
 function enviarLead() {
   if (!LEADS_ENDPOINT) return; // ainda não configurado — nada é enviado
