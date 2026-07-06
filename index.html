@@ -431,6 +431,7 @@
     letter-spacing: -0.01em;
   }
   .btn-cta-big:hover { background: #0a6349; transform: translateY(-1px); }
+  .btn-cta-big:disabled { background: var(--gray-300); color: var(--gray-500); cursor: not-allowed; transform: none; }
 
   /* disclaimer */
   .disclaimer {
@@ -688,10 +689,34 @@
         <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a.75.75 0 110 1.5A.75.75 0 018 4zm0 3.25c.414 0 .75.336.75.75v3a.75.75 0 01-1.5 0V8a.75.75 0 01.75-.75z"/></svg>
         <span id="segDetailText">Selecione um segmento acima para ver observações específicas.</span>
       </div>
+
+      <!-- Dados de contato para liberar a simulação -->
+      <div class="field">
+        <label>Nome</label>
+        <div class="input-wrap">
+          <input type="text" class="no-prefix" id="sim-nome" placeholder="Seu nome completo" oninput="atualizarBotaoSimulacao()"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>E-mail</label>
+        <div class="input-wrap">
+          <input type="email" class="no-prefix" id="sim-email" placeholder="seu@email.com.br" oninput="atualizarBotaoSimulacao()"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Contato <span>(WhatsApp/telefone)</span></label>
+        <div class="input-wrap">
+          <input type="tel" class="no-prefix" id="sim-contato" placeholder="(85) 9 9999-0000" oninput="atualizarBotaoSimulacao()"/>
+        </div>
+      </div>
+
+      <button class="btn-cta-big" id="btnSimulacao" onclick="liberarSimulacao()">Quero Receber Minha Simulação</button>
     </div>
 
     <!-- RESULTS -->
-    <div class="results-card">
+    <div class="results-card" id="resultsCard" style="display:none;">
       <div class="results-header">
         <p>Economia anual estimada</p>
         <div class="economy-number" id="ecoAnual">R$ 0</div>
@@ -1228,9 +1253,33 @@ function submitModal() {
   `;
 }
 
+// ── LIBERAR SIMULAÇÃO ──────────────────────────────
+function dadosSimulacaoValidos() {
+  const nome = document.getElementById('sim-nome').value.trim();
+  const email = document.getElementById('sim-email').value.trim();
+  const contato = document.getElementById('sim-contato').value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return nome.length > 0 && emailOk && contato.length > 0;
+}
+function atualizarBotaoSimulacao() {
+  const btn = document.getElementById('btnSimulacao');
+  btn.disabled = !dadosSimulacaoValidos();
+}
+function liberarSimulacao() {
+  if (!dadosSimulacaoValidos()) {
+    alert('Preencha nome, e-mail e contato para receber sua simulação.');
+    return;
+  }
+  calcular();
+  const card = document.getElementById('resultsCard');
+  card.style.display = 'block';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // ── INIT ───────────────────────────────────────────
 buildSegGrid();
 calcular();
+atualizarBotaoSimulacao();
 </script>
 </body>
 </html>
