@@ -13,13 +13,13 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --navy: #0D2B4E;
-    --navy-light: #1A3E6B;
-    --green: #0E7A5F;
-    --green-light: #E6F4F1;
-    --green-mid: #B2DFDB;
-    --blue-accent: #1B6FC8;
-    --blue-light: #EBF3FC;
+    --navy: #002826;
+    --navy-light: #0A4A42;
+    --green: #159A12;
+    --green-light: #E8F8E4;
+    --green-mid: #86E06A;
+    --blue-accent: #1EA30D;
+    --blue-light: #E9F7E4;
     --gray-100: #F7F8FA;
     --gray-200: #EAECF0;
     --gray-300: #D1D5DB;
@@ -69,7 +69,7 @@
   }
   .logo-mark svg { width: 18px; height: 18px; fill: white; }
   .logo-name { color: white; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
-  .logo-name span { color: #7EC8E3; }
+  .logo-name span { color: #4ADF03; }
 
   .header-cta {
     display: flex; align-items: center; gap: 10px;
@@ -84,7 +84,7 @@
     transition: background 0.15s, transform 0.1s;
     white-space: nowrap;
   }
-  .btn-contact:hover { background: #0a6349; transform: translateY(-1px); }
+  .btn-contact:hover { background: #0E7A0A; transform: translateY(-1px); }
   .btn-contact:active { transform: translateY(0); }
   .btn-contact svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; }
 
@@ -100,7 +100,7 @@
 
   /* ── HERO ── */
   .hero {
-    background: linear-gradient(160deg, var(--navy) 0%, #0F3564 60%, #133D73 100%);
+    background: linear-gradient(160deg, var(--navy) 0%, #063F38 55%, #0A544A 100%);
     padding: 5rem 2rem 4rem;
     text-align: center;
     position: relative;
@@ -109,15 +109,15 @@
   .hero::before {
     content: '';
     position: absolute; inset: 0;
-    background-image: radial-gradient(circle at 20% 80%, rgba(27,111,200,0.15) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 20%, rgba(14,122,95,0.12) 0%, transparent 50%);
+    background-image: radial-gradient(circle at 20% 80%, rgba(74,223,3,0.14) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(30,163,13,0.12) 0%, transparent 50%);
   }
   .hero-inner { position: relative; max-width: 720px; margin: 0 auto; }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(255,255,255,0.10);
     border: 1px solid rgba(255,255,255,0.18);
-    color: #93C5FD; font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+    color: #8CEE6E; font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
     text-transform: uppercase; padding: 5px 14px; border-radius: 999px;
     margin-bottom: 1.5rem;
   }
@@ -127,7 +127,7 @@
     font-weight: 700; letter-spacing: -0.03em;
     line-height: 1.15; margin-bottom: 1rem;
   }
-  .hero h1 em { color: #7EC8E3; font-style: normal; }
+  .hero h1 em { color: #4ADF03; font-style: normal; }
   .hero p {
     color: rgba(255,255,255,0.72); font-size: 1.05rem;
     max-width: 540px; margin: 0 auto 2rem;
@@ -272,7 +272,7 @@
   .seg-btn:hover { border-color: var(--blue-accent); background: var(--blue-light); }
   .seg-btn.active {
     border-color: var(--blue-accent); background: var(--blue-light);
-    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+    box-shadow: 0 0 0 3px rgba(30,163,13,0.15);
   }
   .seg-icon {
     width: 36px; height: 36px; border-radius: 9px;
@@ -325,7 +325,7 @@
   .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
   .input-wrap input:focus {
     outline: none; border-color: var(--blue-accent);
-    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+    box-shadow: 0 0 0 3px rgba(30,163,13,0.15);
   }
   .input-wrap input.no-prefix { padding-left: 12px; }
 
@@ -340,7 +340,7 @@
   }
   select.inp:focus {
     outline: none; border-color: var(--blue-accent);
-    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+    box-shadow: 0 0 0 3px rgba(30,163,13,0.15);
   }
 
   /* Regime pills */
@@ -365,7 +365,7 @@
   .aliq-info {
     display: flex; gap: 6px; align-items: flex-start;
     background: var(--blue-light); border-radius: var(--radius-sm);
-    padding: 10px 12px; font-size: 12px; color: #1A3E6B;
+    padding: 10px 12px; font-size: 12px; color: #0C4A44;
     margin-top: 10px; line-height: 1.5;
   }
   .aliq-info svg { width: 14px; height: 14px; fill: var(--blue-accent); flex-shrink: 0; margin-top: 1px; }
@@ -383,10 +383,10 @@
   }
   .results-header p { color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
   .economy-number {
-    color: #7EC8E3; font-size: 2.8rem; font-weight: 700;
+    color: #4ADF03; font-size: 2.8rem; font-weight: 700;
     letter-spacing: -0.04em; line-height: 1; transition: color 0.3s;
   }
-  .economy-number.positive { color: #4ADE80; }
+  .economy-number.positive { color: #5FE325; }
   .economy-sub { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 6px; }
 
   .results-body { padding: 1.5rem 1.75rem; }
@@ -432,7 +432,7 @@
     text-decoration: none; transition: background 0.15s, transform 0.1s;
     letter-spacing: -0.01em;
   }
-  .btn-cta-big:hover { background: #0a6349; transform: translateY(-1px); }
+  .btn-cta-big:hover { background: #0E7A0A; transform: translateY(-1px); }
   .btn-cta-big:disabled { background: var(--gray-300); color: var(--gray-500); cursor: not-allowed; transform: none; }
 
   /* disclaimer */
@@ -455,7 +455,7 @@
     background: var(--navy); color: rgba(255,255,255,0.5);
     text-align: center; padding: 1.5rem 2rem; font-size: 12px; line-height: 1.7;
   }
-  footer a { color: #7EC8E3; text-decoration: none; }
+  footer a { color: #4ADF03; text-decoration: none; }
 
   /* ── MODAL ── */
   .modal-overlay {
@@ -489,7 +489,7 @@
   }
   .modal .field input:focus, .modal .field select.inp:focus {
     outline: none; border-color: var(--blue-accent);
-    box-shadow: 0 0 0 3px rgba(27,111,200,0.12);
+    box-shadow: 0 0 0 3px rgba(30,163,13,0.15);
   }
   .modal-economy-summary {
     background: var(--green-light); border-radius: var(--radius-sm);
@@ -503,7 +503,7 @@
     border: none; border-radius: var(--radius-sm); font-family: inherit;
     font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.15s;
   }
-  .btn-modal-submit:hover { background: #0a6349; }
+  .btn-modal-submit:hover { background: #0E7A0A; }
   .modal-legal { font-size: 11px; color: var(--gray-500); text-align: center; margin-top: 10px; line-height: 1.5; }
 
   /* success */
